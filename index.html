@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PSX Legacy Cheats Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
+
+  <style>
+    :root {
+      --bg-color: #2c2f33;
+      --card-bg-color: #36393f;
+      --text-color: #dcddde;
+      --primary-button-bg: #7289da;
+      --secondary-button-bg: #4f545c;
+      --hover-color: #5b6eae;
+      --border-color: #23272a;
+      --input-bg: #23272a; /* Darker for editor */
+      --caret-color: #dcddde;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden; /* Prevent body scrolling */
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: var(--primary-button-bg);
+      margin-bottom: 20px;
+      flex-shrink: 0;
+    }
+
+    .main-container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
+      flex-grow: 1; /* Allow container to grow vertically */
+      min-height: 0; /* Fix for flexbox height in some browsers */
+    }
+
+    .converter-card {
+      background-color: var(--card-bg-color);
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      box-sizing: border-box;
+      transition: transform 0.2s ease-in-out;
+      flex: 1 1 0; /* Allow cards to grow and shrink */
+      min-width: 0; /* Fix for flexbox width */
+      resize: both;
+      overflow: auto;
+    }
+
+    .converter-card:hover {
+      transform: translateY(-5px);
+    }
+
+    h2 {
+      color: var(--primary-button-bg);
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .editor-container {
+        position: relative;
+        flex-grow: 1; /* Allow editor to take up all available vertical space */
+        min-height: 200px; /* Minimum height */
+    }
+    
+    .editor-textarea, .editor-highlighted {
+        margin: 0;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.9em;
+        line-height: 1.5;
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: auto;
+        white-space: pre;
+        word-wrap: normal;
+    }
+
+    .editor-textarea {
+        z-index: 1;
+        background: transparent;
+        color: transparent;
+        caret-color: var(--caret-color);
+        resize: none;
+    }
+
+    .editor-textarea::placeholder {
+        color: #72767d;
+    }
+    
+    .editor-highlighted {
+        z-index: 0;
+        pointer-events: none;
+        background-color: var(--input-bg);
+    }
+    
+    .editor-highlighted > code {
+      display: block;
+      min-height: 100%;
+    }
+
+    .DL-line,
+    .convertTo,
+    .clear-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    button {
+      background-color: var(--primary-button-bg);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 15px;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    button:hover {
+      background-color: var(--hover-color);
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .secondary-btn {
+      background-color: var(--secondary-button-bg);
+    }
+
+    .secondary-btn:hover {
+      background-color: #6a717c;
+    }
+
+    .DL-line p {
+      flex-grow: 1;
+      text-align: center;
+      background-color: var(--input-bg);
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 0.85em;
+      color: #99aab5;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    #info {
+      background-color: var(--card-bg-color);
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      padding: 15px 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: 20px;
+    }
+
+    #info p {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-color);
+    }
+
+    #info input[type="text"] {
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      padding: 8px 12px;
+      color: var(--text-color);
+      font-size: 0.9em;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    #info input[type="text"]::placeholder {
+      color: #72767d;
+    }
+
+    #info input[type="text"]:focus {
+      border-color: var(--primary-button-bg);
+    }
+
+    .source-info {
+      text-align: center;
+      font-size: 0.9em;
+      color: #99aab5;
+      flex-shrink: 0;
+      padding-top: 15px;
+    }
+
+    .source-info a {
+      color: var(--primary-button-bg);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .source-info a:hover {
+      color: var(--hover-color);
+      text-decoration: underline;
+    }
+
+    #theme-toggle {
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        font-size: 1.1em;
+        padding: 8px 12px;
+        background-color: var(--card-bg-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+    }
+
+    #theme-toggle:hover {
+        background-color: #424549;
+    }
+
+    body.light-mode {
+      --bg-color: #f4f4f9;
+      --card-bg-color: #ffffff;
+      --text-color: #212529;
+      --primary-button-bg: #007bff;
+      --secondary-button-bg: #e9ecef;
+      --hover-color: #0056b3;
+      --border-color: #dee2e6;
+      --input-bg: #f8f9fa;
+      --caret-color: #212529;
+    }
+
+    body.light-mode h1,
+    body.light-mode h2 {
+        color: #0056b3;
+    }
+    
+    body.light-mode .source-info a {
+        color: var(--primary-button-bg);
+    }
+
+    body.light-mode .source-info a:hover {
+        color: var(--hover-color);
+    }
+
+    body.light-mode button.secondary-btn {
+        color: #212529;
+    }
+
+    body.light-mode button.secondary-btn:hover {
+        background-color: #d6d8db;
+    }
+
+    body.light-mode .DL-line p, body.light-mode #info input[type="text"] {
+        color: #495057;
+        background-color: #e9ecef;
+    }
+
+    body.light-mode #info input[type="text"]::placeholder {
+        color: #6c757d;
+    }
+    
+    body.light-mode .editor-highlighted {
+        background-color: var(--input-bg);
+    }
+
+    /* Light theme for highlight.js */
+    body.light-mode .hljs {
+        background: var(--input-bg);
+        color: #212529;
+    }
+    body.light-mode .hljs-comment,
+    body.light-mode .hljs-quote {
+        color: #6c757d;
+    }
+    body.light-mode .hljs-variable,
+    body.light-mode .hljs-template-variable,
+    body.light-mode .hljs-tag,
+    body.light-mode .hljs-name,
+    body.light-mode .hljs-selector-id,
+    body.light-mode .hljs-selector-class,
+    body.light-mode .hljs-regexp,
+    body.light-mode .hljs-deletion {
+        color: #c92a2a;
+    }
+    body.light-mode .hljs-number,
+    body.light-mode .hljs-built_in,
+    body.light-mode .hljs-builtin-name,
+    body.light-mode .hljs-literal,
+    body.light-mode .hljs-type,
+    body.light-mode .hljs-params,
+    body.light-mode .hljs-meta,
+    body.light-mode .hljs-link {
+        color: #f76707;
+    }
+    body.light-mode .hljs-attribute {
+        color: #d6336c;
+    }
+    body.light-mode .hljs-string,
+    body.light-mode .hljs-symbol,
+    body.light-mode .hljs-bullet,
+    body.light-mode .hljs-addition {
+        color: #2b9a2b;
+    }
+    body.light-mode .hljs-title,
+    body.light-mode .hljs-section {
+        color: #1971c2;
+    }
+    body.light-mode .hljs-keyword,
+    body.light-mode .hljs-selector-tag {
+        color: #845ef7;
+    }
+    body.light-mode .hljs-emphasis {
+        font-style: italic;
+    }
+    body.light-mode .hljs-strong {
+        font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>PSX Legacy Cheats Converter</h1>
+  <button id="theme-toggle" title="Toggle Theme"><i class="fas fa-sun"></i></button>
+
+  <div class="main-container">
+    <div id="OG" class="converter-card">
+      <div class="type"><h2><i class="fas fa-microchip"></i> Absolute Address (Toolbox)</h2></div>
+      <div class="editor-container">
+        <textarea id="og-textarea" class="editor-textarea" spellcheck="false" placeholder="Paste your Absolute Address JSON here..."></textarea>
+        <pre class="editor-highlighted" aria-hidden="true"><code class="language-json"></code></pre>
+      </div>
+      <div class="DL-line">
+        <button><i class="fas fa-download"></i> Download</button>
+        <p>Filename: N/A</p>
+      </div>
+      <div class="convertTo">
+        <button id="OG-to-GoldHEN">to GoldHEN</button>
+        <button id="OG-to-both" class="secondary-btn">Convert All</button>
+        <button id="OG-to-SHN">to SHN</button>
+      </div>
+      <div class="clear-actions"><button class="secondary-btn"><i class="fas fa-eraser"></i> Clear</button></div>
+    </div>
+
+    <div id="GoldHEN" class="converter-card">
+      <div class="type"><h2><i class="fas fa-gamepad"></i> Relative Address (GoldHEN)</h2></div>
+       <div class="editor-container">
+        <textarea id="goldhen-textarea" class="editor-textarea" spellcheck="false" placeholder="Paste your GoldHEN JSON here..."></textarea>
+        <pre class="editor-highlighted" aria-hidden="true"><code class="language-json"></code></pre>
+      </div>
+      <div class="DL-line">
+        <button><i class="fas fa-download"></i> Download</button>
+        <p>Filename: N/A</p>
+      </div>
+      <div class="convertTo">
+        <button id="GoldHEN-to-OG">to Original</button>
+        <button id="GoldHEN-to-both" class="secondary-btn">Convert All</button>
+        <button id="GoldHEN-to-SHN">to SHN</button>
+      </div>
+      <div class="clear-actions">
+        <button class="secondary-btn"><i class="fas fa-eraser"></i> Clear</button>
+        <button class="secondary-btn" id="clear-all-btn"><i class="fas fa-trash-alt"></i> Clear All</button>
+      </div>
+    </div>
+
+    <div id="SHN" class="converter-card">
+      <div class="type"><h2><i class="fas fa-file-code"></i> SHN Format</h2></div>
+       <div class="editor-container">
+        <textarea id="shn-textarea" class="editor-textarea" spellcheck="false" placeholder="Paste your SHN XML here..."></textarea>
+        <pre class="editor-highlighted" aria-hidden="true"><code class="language-xml"></code></pre>
+      </div>
+      <div class="DL-line">
+        <button><i class="fas fa-download"></i> Download</button>
+        <p>Filename: N/A</p>
+      </div>
+      <div class="convertTo">
+        <button id="SHN-to-OG">to Original</button>
+        <button id="SHN-to-both" class="secondary-btn">Convert All</button>
+        <button id="SHN-to-GoldHEN">to GoldHEN</button>
+      </div>
+      <div class="clear-actions"><button class="secondary-btn"><i class="fas fa-eraser"></i> Clear</button></div>
+    </div>
+  </div>
+
+  <div id="info">
+    <p>Genre: <input type="text" placeholder="Adventure" id="genre"></p>
+    <p>Firmware version: <input type="text" placeholder="9.00" id="fwv"></p>
+  </div>
+
+  <div class="source-info">
+    <p>Based on original source from <a href="https://github.com/JustGotenks/ps4-cheats-converter" target="_blank" rel="noopener noreferrer">https://github.com/JustGotenks/ps4-cheats-converter</a></p>
+  </div>
+
+  <script>
+    // --- Instant Editor with Non-Blocking Syntax Highlighting ---
+    const editorMap = new Map();
+
+    function initEditor(container) {
+        const textarea = container.querySelector('textarea');
+        const pre = container.querySelector('pre');
+        const code = pre.querySelector('code');
+        let idleCallbackId = null;
+
+        function highlightSyntax() {
+            hljs.highlightElement(code);
+        }
+
+        function update(immediate = false) {
+            const text = textarea.value;
+            // Add a newline to the end to fix a highlight.js bug where
+            // the last line isn't highlighted if it doesn't end with a newline.
+            code.textContent = text + '\n';
+            
+            if (idleCallbackId) cancelIdleCallback(idleCallbackId);
+
+            if(immediate) {
+                 highlightSyntax();
+            } else {
+                idleCallbackId = requestIdleCallback(highlightSyntax);
+            }
+        }
+
+        function syncScroll() {
+            pre.scrollTop = textarea.scrollTop;
+            pre.scrollLeft = textarea.scrollLeft;
+        }
+
+        textarea.addEventListener('input', () => update());
+        textarea.addEventListener('scroll', syncScroll);
+
+        // Store the update function to be called externally
+        editorMap.set(textarea.id, update);
+    }
+    
+    document.querySelectorAll('.editor-container').forEach(initEditor);
+    
+    // --- Application Logic ---
+    const createDownloadLink = (strContents, filename) => {
+      const blob = new Blob([strContents], { type: 'text/plain' });
+      const tempLink = document.createElement('a');
+      tempLink.setAttribute('href', URL.createObjectURL(blob));
+      tempLink.setAttribute('download', filename);
+      return tempLink;
+    }
+
+    const goldHenFilename = (jsonObj) => {
+      const process = jsonObj.process === 'eboot.bin' ? '' : `_${jsonObj.process}`;
+      const cusa = jsonObj.id;
+      const version = jsonObj.version;
+      return `${cusa}_${version}${process}.json`;
+    }
+
+    const shnFilename = (shnStr) => {
+      try {
+          const xmlDoc = (new DOMParser()).parseFromString(shnStr, 'text/xml');
+          const trainerEle = xmlDoc.querySelector('Trainer');
+          if (!trainerEle) return 'cheats.shn';
+          const game = (trainerEle.attributes['Game']?.value || 'Game').replaceAll(/[^\w\d]/g, '');
+          const creator = trainerEle.attributes['Moder']?.value || 'Creator';
+          const cusa = trainerEle.attributes['Cusa']?.value || 'CUSAXXXXX';
+          const version = trainerEle.attributes['Version']?.value || '1.00';
+          const FWv = document.getElementById('fwv').value || '9.00';
+          return `${game}_${cusa}_${version}_${creator}_${FWv}.shn`;
+      } catch (e) {
+          console.error("Error parsing SHN filename:", e);
+          return 'cheats.shn';
+      }
+    }
+    
+    const addOffset = (offsetStr) => (parseInt(offsetStr, 16) + 0x400000).toString(16).toUpperCase();
+    const subOffset = (offsetStr) => (parseInt(offsetStr, 16) - 0x400000).toString(16).toUpperCase();
+    const addLines = (noLines) => noLines?.match(/.{2}/g)?.join('-') || '';
+    const onlyHex = (str) => str?.replaceAll(/[^a-zA-Z0-9]/g, '') || '';
+
+    const toSHN = (jsonObj, toSubOffset = false) => {
+      const genre = document.getElementById('genre').value || 'Adventure';
+      let xmlStr = `<?xml version="1.0" encoding="utf-16"?>
+<Trainer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Game="${jsonObj.name}" Moder="${jsonObj.credits.join(', ')}" Cusa="${jsonObj.id}" Version="${jsonObj.version}" Process="${jsonObj.process}">
+  <Genres Name="${genre}" />
+  <Items />`;
+      let cheats = ''
+      jsonObj.mods.forEach(jMod => {
+        cheats += `\n  <Cheat Text="${jMod.name}" Description="${jMod.description ? jMod.description : ''}">\n`;
+        jMod.memory.forEach(jMem => {
+          cheats += `    <Cheatline>
+      <Section>0</Section>
+      <Offset>${toSubOffset ? subOffset(jMem.offset) : jMem.offset}</Offset>
+      <ValueOn>${addLines(jMem.on)}</ValueOn>
+      <ValueOff>${addLines(jMem.off)}</ValueOff>
+    </Cheatline>\n`
+        });
+        cheats += `  </Cheat>`
+      });
+      xmlStr += cheats + '\n</Trainer>';
+      return xmlStr;
+    }
+
+    const changeJsonOffset = (jObj, toAddOffset = false) => {
+      const jsonObj = JSON.parse(JSON.stringify(jObj)); // Deep copy
+      jsonObj.mods.forEach((mod) => {
+        mod.memory.forEach((mem) => {
+          mem.offset = toAddOffset ? addOffset(mem.offset) : subOffset(mem.offset);
+        });
+      });
+      return jsonObj;
+    }
+
+    const shnToJson = (isToolbox) => {
+        const xmlStr = document.getElementById('shn-textarea').value;
+        const xmlDoc = (new DOMParser()).parseFromString(xmlStr, 'text/xml');
+        const trainerEle = xmlDoc.querySelector('Trainer');
+        const jsonObj = {
+            name: trainerEle.attributes['Game']?.value,
+            id: trainerEle.attributes['Cusa']?.value,
+            version: trainerEle.attributes['Version']?.value,
+            process: trainerEle.attributes['Process']?.value,
+            mods: [],
+            credits: trainerEle.attributes['Moder']?.value.split(/\, ?/g) || []
+        };
+        const cheats = xmlDoc.querySelectorAll('Cheat');
+        cheats.forEach(cheat => {
+            const mod = {
+                name: cheat.attributes['Text']?.value,
+                description: cheat.attributes['Description'] ? cheat.attributes['Description'].value : "none",
+                type: 'checkbox',
+                memory: []
+            };
+            if (isToolbox) {
+                mod.hint = 'null';
+            }
+            cheat.querySelectorAll('Cheatline').forEach(cheatline => {
+                const mem = {
+                    offset: cheatline.querySelector('Offset')?.textContent || '0',
+                    on: onlyHex(cheatline.querySelector('ValueOn')?.textContent || ''),
+                    off: onlyHex(cheatline.querySelector('ValueOff')?.textContent || '')
+                };
+                mod.memory.push(mem);
+            });
+            jsonObj.mods.push(mod);
+        });
+        return jsonObj;
+    }
+    
+    const setOG = (jsonObj) => {
+        const textarea = document.getElementById('og-textarea');
+        textarea.value = JSON.stringify(jsonObj, null, 2);
+        editorMap.get('og-textarea')?.(true); // Trigger immediate highlight
+        document.querySelector('#OG .DL-line p').textContent = `Filename: ${goldHenFilename(jsonObj)}`;
+    }
+    const setGoldHEN = (jsonObj) => {
+        const textarea = document.getElementById('goldhen-textarea');
+        textarea.value = JSON.stringify(jsonObj, null, 2);
+        editorMap.get('goldhen-textarea')?.(true);
+        document.querySelector('#GoldHEN .DL-line p').textContent = `Filename: ${goldHenFilename(jsonObj)}`;
+    }
+    const setSHN = (shnStr) => {
+        const textarea = document.getElementById('shn-textarea');
+        textarea.value = shnStr;
+        editorMap.get('shn-textarea')?.(true);
+        document.querySelector('#SHN .DL-line p').textContent = `Filename: ${shnFilename(shnStr)}`;
+    }
+    
+    const convertOG = (toType) => {
+      const ogText = document.getElementById('og-textarea').value;
+      if (!ogText.trim()) return;
+      try {
+        const jsonObj = JSON.parse(ogText);
+        if (toType === 'GoldHEN') setGoldHEN(changeJsonOffset(jsonObj));
+        else if (toType === 'SHN') setSHN(toSHN(jsonObj));
+        else { // 'both'
+          setGoldHEN(changeJsonOffset(jsonObj));
+          setSHN(toSHN(jsonObj));
+        }
+      } catch (e) { alert("Invalid JSON in Absolute Address (Toolbox) input: " + e.message); }
+    }
+
+    const convertGoldHEN = (toType) => {
+      const goldhenText = document.getElementById('goldhen-textarea').value;
+      if (!goldhenText.trim()) return;
+      try {
+        const jsonObj = JSON.parse(goldhenText);
+        if (toType === 'OG') setOG(changeJsonOffset(jsonObj, true));
+        else if (toType === 'SHN') setSHN(toSHN(jsonObj, true));
+        else { // 'both'
+          setOG(changeJsonOffset(jsonObj, true));
+          setSHN(toSHN(jsonObj, true));
+        }
+      } catch (e) { alert("Invalid JSON in Relative Address (GoldHEN) input: " + e.message); }
+    }
+
+    const convertSHN = (toType) => {
+      const shnText = document.getElementById('shn-textarea').value;
+      if (!shnText.trim()) return;
+      try {
+        if (toType === 'OG') setOG(changeJsonOffset(shnToJson(true), true));
+        else if (toType === 'GoldHEN') setGoldHEN(shnToJson(false));
+        else { // 'both'
+          setOG(changeJsonOffset(shnToJson(true), true));
+          setGoldHEN(shnToJson(false));
+        }
+      } catch (e) { alert("Invalid SHN XML input: " + e.message); }
+    }
+
+    document.getElementById('OG-to-GoldHEN').onclick = () => convertOG('GoldHEN');
+    document.getElementById('OG-to-both').onclick = () => convertOG('both');
+    document.getElementById('OG-to-SHN').onclick = () => convertOG('SHN');
+
+    document.getElementById('GoldHEN-to-OG').onclick = () => convertGoldHEN('OG');
+    document.getElementById('GoldHEN-to-both').onclick = () => convertGoldHEN('both');
+    document.getElementById('GoldHEN-to-SHN').onclick = () => convertGoldHEN('SHN');
+
+    document.getElementById('SHN-to-OG').onclick = () => convertSHN('OG');
+    document.getElementById('SHN-to-both').onclick = () => convertSHN('both');
+    document.getElementById('SHN-to-GoldHEN').onclick = () => convertSHN('GoldHEN');
+
+    const downloadHandler = (textareaId, filenameSelector) => {
+        const content = document.getElementById(textareaId).value;
+        if (!content.trim()) return;
+        try {
+            const filename = document.querySelector(filenameSelector).textContent.replace('Filename: ', '');
+            const downloadLink = createDownloadLink(content, filename);
+            downloadLink.click();
+            URL.revokeObjectURL(downloadLink.href);
+        } catch (e) { alert(`Error creating download file.`); }
+    };
+    
+    document.querySelector('#OG .DL-line button').onclick = () => downloadHandler('og-textarea', '#OG .DL-line p');
+    document.querySelector('#GoldHEN .DL-line button').onclick = () => downloadHandler('goldhen-textarea', '#GoldHEN .DL-line p');
+    document.querySelector('#SHN .DL-line button').onclick = () => downloadHandler('shn-textarea', '#SHN .DL-line p');
+    
+    const clearEditorAndFilename = (cardId, textareaId) => {
+        const textarea = document.getElementById(textareaId);
+        textarea.value = '';
+        editorMap.get(textareaId)?.(true);
+        document.querySelector(`#${cardId} .DL-line p`).textContent = 'Filename: N/A';
+    };
+
+    document.querySelector('#OG .clear-actions button').onclick = () => clearEditorAndFilename('OG', 'og-textarea');
+    document.querySelector('#GoldHEN .clear-actions button:first-child').onclick = () => clearEditorAndFilename('GoldHEN', 'goldhen-textarea');
+    document.querySelector('#SHN .clear-actions button').onclick = () => clearEditorAndFilename('SHN', 'shn-textarea');
+
+    document.getElementById('clear-all-btn').onclick = () => {
+      clearEditorAndFilename('OG', 'og-textarea');
+      clearEditorAndFilename('GoldHEN', 'goldhen-textarea');
+      clearEditorAndFilename('SHN', 'shn-textarea');
+    };
+
+    // --- Theme Toggler ---
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeIcon = themeToggleBtn.querySelector('i');
+    const currentTheme = localStorage.getItem('theme');
+
+    const setLightTheme = () => {
+        document.body.classList.add('light-mode');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        localStorage.setItem('theme', 'light');
+    };
+
+    const setDarkTheme = () => {
+        document.body.classList.remove('light-mode');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        localStorage.setItem('theme', 'dark');
+    };
+
+    if (currentTheme === 'light') {
+        setLightTheme();
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+        if (document.body.classList.contains('light-mode')) {
+            setDarkTheme();
+        } else {
+            setLightTheme();
+        }
+    });
+
+  </script>
+</body>
+</html>
