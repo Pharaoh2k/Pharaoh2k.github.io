@@ -1,724 +1,1048 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PSX Legacy Cheats Converter</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
-
-  <style>
-    :root {
-      --bg-color: #2c2f33;
-      --card-bg-color: #36393f;
-      --text-color: #dcddde;
-      --primary-button-bg: #7289da;
-      --secondary-button-bg: #4f545c;
-      --hover-color: #5b6eae;
-      --border-color: #23272a;
-      --input-bg: #23272a; /* Darker for editor */
-      --caret-color: #dcddde;
-    }
-
-    html, body {
-      height: 100%;
-      margin: 0;
-      overflow: hidden; /* Prevent body scrolling */
-    }
-
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      box-sizing: border-box;
-    }
-
-    h1 {
-      color: var(--primary-button-bg);
-      margin-bottom: 20px;
-      flex-shrink: 0;
-    }
-
-    .main-container {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      width: 100%;
-      flex-grow: 1; /* Allow container to grow vertically */
-      min-height: 0; /* Fix for flexbox height in some browsers */
-    }
-
-    .converter-card {
-      background-color: var(--card-bg-color);
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      padding: 25px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      box-sizing: border-box;
-      transition: transform 0.2s ease-in-out;
-      flex: 1 1 0; /* Allow cards to grow and shrink */
-      min-width: 0; /* Fix for flexbox width */
-      resize: both;
-      overflow: auto;
-    }
-
-    .converter-card:hover {
-      transform: translateY(-5px);
-    }
-
-    h2 {
-      color: var(--primary-button-bg);
-      text-align: center;
-      margin-bottom: 10px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .editor-container {
-        position: relative;
-        flex-grow: 1; /* Allow editor to take up all available vertical space */
-        min-height: 200px; /* Minimum height */
-    }
-    
-    .editor-textarea, .editor-highlighted {
-        margin: 0;
-        padding: 10px;
-        border: 1px solid var(--border-color);
-        border-radius: 5px;
-        font-family: 'Roboto Mono', monospace;
-        font-size: 0.9em;
-        line-height: 1.5;
-        height: 100%;
-        width: 100%;
-        box-sizing: border-box;
-        position: absolute;
-        top: 0;
-        left: 0;
-        overflow: auto;
-        white-space: pre;
-        word-wrap: normal;
-    }
-
-    .editor-textarea {
-        z-index: 1;
-        background: transparent;
-        color: transparent;
-        caret-color: var(--caret-color);
-        resize: none;
-    }
-
-    .editor-textarea::placeholder {
-        color: #72767d;
-    }
-    
-    .editor-highlighted {
-        z-index: 0;
-        pointer-events: none;
-        background-color: var(--input-bg);
-    }
-    
-    .editor-highlighted > code {
-      display: block;
-      min-height: 100%;
-    }
-
-    .DL-line,
-    .convertTo,
-    .clear-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    button {
-      background-color: var(--primary-button-bg);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 15px;
-      font-size: 0.9em;
-      cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    button:hover {
-      background-color: var(--hover-color);
-      transform: translateY(-1px);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    .secondary-btn {
-      background-color: var(--secondary-button-bg);
-    }
-
-    .secondary-btn:hover {
-      background-color: #6a717c;
-    }
-
-    .DL-line p {
-      flex-grow: 1;
-      text-align: center;
-      background-color: var(--input-bg);
-      border-radius: 5px;
-      padding: 10px;
-      font-size: 0.85em;
-      color: #99aab5;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    #info {
-      background-color: var(--card-bg-color);
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      padding: 15px 25px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-      width: 100%;
-      flex-shrink: 0;
-      margin-top: 20px;
-    }
-
-    #info p {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--text-color);
-    }
-
-    #info input[type="text"] {
-      background-color: var(--input-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 5px;
-      padding: 8px 12px;
-      color: var(--text-color);
-      font-size: 0.9em;
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-
-    #info input[type="text"]::placeholder {
-      color: #72767d;
-    }
-
-    #info input[type="text"]:focus {
-      border-color: var(--primary-button-bg);
-    }
-
-    .source-info {
-      text-align: center;
-      font-size: 0.9em;
-      color: #99aab5;
-      flex-shrink: 0;
-      padding-top: 15px;
-    }
-
-    .source-info a {
-      color: var(--primary-button-bg);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .source-info a:hover {
-      color: var(--hover-color);
-      text-decoration: underline;
-    }
-
-    #theme-toggle {
-        position: absolute;
-        top: 25px;
-        right: 25px;
-        font-size: 1.1em;
-        padding: 8px 12px;
-        background-color: var(--card-bg-color);
-        color: var(--text-color);
-        border: 1px solid var(--border-color);
-    }
-
-    #theme-toggle:hover {
-        background-color: #424549;
-    }
-
-    body.light-mode {
-      --bg-color: #f4f4f9;
-      --card-bg-color: #ffffff;
-      --text-color: #212529;
-      --primary-button-bg: #007bff;
-      --secondary-button-bg: #e9ecef;
-      --hover-color: #0056b3;
-      --border-color: #dee2e6;
-      --input-bg: #f8f9fa;
-      --caret-color: #212529;
-    }
-
-    body.light-mode h1,
-    body.light-mode h2 {
-        color: #0056b3;
-    }
-    
-    body.light-mode .source-info a {
-        color: var(--primary-button-bg);
-    }
-
-    body.light-mode .source-info a:hover {
-        color: var(--hover-color);
-    }
-
-    body.light-mode button.secondary-btn {
-        color: #212529;
-    }
-
-    body.light-mode button.secondary-btn:hover {
-        background-color: #d6d8db;
-    }
-
-    body.light-mode .DL-line p, body.light-mode #info input[type="text"] {
-        color: #495057;
-        background-color: #e9ecef;
-    }
-
-    body.light-mode #info input[type="text"]::placeholder {
-        color: #6c757d;
-    }
-    
-    body.light-mode .editor-highlighted {
-        background-color: var(--input-bg);
-    }
-
-    /* Light theme for highlight.js */
-    body.light-mode .hljs {
-        background: var(--input-bg);
-        color: #212529;
-    }
-    body.light-mode .hljs-comment,
-    body.light-mode .hljs-quote {
-        color: #6c757d;
-    }
-    body.light-mode .hljs-variable,
-    body.light-mode .hljs-template-variable,
-    body.light-mode .hljs-tag,
-    body.light-mode .hljs-name,
-    body.light-mode .hljs-selector-id,
-    body.light-mode .hljs-selector-class,
-    body.light-mode .hljs-regexp,
-    body.light-mode .hljs-deletion {
-        color: #c92a2a;
-    }
-    body.light-mode .hljs-number,
-    body.light-mode .hljs-built_in,
-    body.light-mode .hljs-builtin-name,
-    body.light-mode .hljs-literal,
-    body.light-mode .hljs-type,
-    body.light-mode .hljs-params,
-    body.light-mode .hljs-meta,
-    body.light-mode .hljs-link {
-        color: #f76707;
-    }
-    body.light-mode .hljs-attribute {
-        color: #d6336c;
-    }
-    body.light-mode .hljs-string,
-    body.light-mode .hljs-symbol,
-    body.light-mode .hljs-bullet,
-    body.light-mode .hljs-addition {
-        color: #2b9a2b;
-    }
-    body.light-mode .hljs-title,
-    body.light-mode .hljs-section {
-        color: #1971c2;
-    }
-    body.light-mode .hljs-keyword,
-    body.light-mode .hljs-selector-tag {
-        color: #845ef7;
-    }
-    body.light-mode .hljs-emphasis {
-        font-style: italic;
-    }
-    body.light-mode .hljs-strong {
-        font-weight: bold;
-    }
-  </style>
-</head>
-
-<body>
-  <h1>PSX Legacy Cheats Converter</h1>
-  <button id="theme-toggle" title="Toggle Theme"><i class="fas fa-sun"></i></button>
-
-  <div class="main-container">
-    <div id="OG" class="converter-card">
-      <div class="type"><h2><i class="fas fa-microchip"></i> Absolute Address (Toolbox)</h2></div>
-      <div class="editor-container">
-        <textarea id="og-textarea" class="editor-textarea" spellcheck="false" placeholder="Paste your Absolute Address JSON here..."></textarea>
-        <pre class="editor-highlighted" aria-hidden="true"><code class="language-json"></code></pre>
-      </div>
-      <div class="DL-line">
-        <button><i class="fas fa-download"></i> Download</button>
-        <p>Filename: N/A</p>
-      </div>
-      <div class="convertTo">
-        <button id="OG-to-GoldHEN">to GoldHEN</button>
-        <button id="OG-to-both" class="secondary-btn">Convert All</button>
-        <button id="OG-to-SHN">to SHN</button>
-      </div>
-      <div class="clear-actions"><button class="secondary-btn"><i class="fas fa-eraser"></i> Clear</button></div>
-    </div>
-
-    <div id="GoldHEN" class="converter-card">
-      <div class="type"><h2><i class="fas fa-gamepad"></i> Relative Address (GoldHEN)</h2></div>
-       <div class="editor-container">
-        <textarea id="goldhen-textarea" class="editor-textarea" spellcheck="false" placeholder="Paste your GoldHEN JSON here..."></textarea>
-        <pre class="editor-highlighted" aria-hidden="true"><code class="language-json"></code></pre>
-      </div>
-      <div class="DL-line">
-        <button><i class="fas fa-download"></i> Download</button>
-        <p>Filename: N/A</p>
-      </div>
-      <div class="convertTo">
-        <button id="GoldHEN-to-OG">to Original</button>
-        <button id="GoldHEN-to-both" class="secondary-btn">Convert All</button>
-        <button id="GoldHEN-to-SHN">to SHN</button>
-      </div>
-      <div class="clear-actions">
-        <button class="secondary-btn"><i class="fas fa-eraser"></i> Clear</button>
-        <button class="secondary-btn" id="clear-all-btn"><i class="fas fa-trash-alt"></i> Clear All</button>
-      </div>
-    </div>
-
-    <div id="SHN" class="converter-card">
-      <div class="type"><h2><i class="fas fa-file-code"></i> SHN Format</h2></div>
-       <div class="editor-container">
-        <textarea id="shn-textarea" class="editor-textarea" spellcheck="false" placeholder="Paste your SHN XML here..."></textarea>
-        <pre class="editor-highlighted" aria-hidden="true"><code class="language-xml"></code></pre>
-      </div>
-      <div class="DL-line">
-        <button><i class="fas fa-download"></i> Download</button>
-        <p>Filename: N/A</p>
-      </div>
-      <div class="convertTo">
-        <button id="SHN-to-OG">to Original</button>
-        <button id="SHN-to-both" class="secondary-btn">Convert All</button>
-        <button id="SHN-to-GoldHEN">to GoldHEN</button>
-      </div>
-      <div class="clear-actions"><button class="secondary-btn"><i class="fas fa-eraser"></i> Clear</button></div>
-    </div>
-  </div>
-
-  <div id="info">
-    <p>Genre: <input type="text" placeholder="Adventure" id="genre"></p>
-    <p>Firmware version: <input type="text" placeholder="9.00" id="fwv"></p>
-  </div>
-
-  <div class="source-info">
-    <p>Based on original source from <a href="https://github.com/JustGotenks/ps4-cheats-converter" target="_blank" rel="noopener noreferrer">https://github.com/JustGotenks/ps4-cheats-converter</a></p>
-  </div>
-
-  <script>
-    // --- Instant Editor with Non-Blocking Syntax Highlighting ---
-    const editorMap = new Map();
-
-    function initEditor(container) {
-        const textarea = container.querySelector('textarea');
-        const pre = container.querySelector('pre');
-        const code = pre.querySelector('code');
-        let idleCallbackId = null;
-
-        function highlightSyntax() {
-            hljs.highlightElement(code);
+{
+  "name": "Elden Ring - Shadow of the Erdtree",
+  "id": "CUSA18723",
+  "version": "01.21",
+  "process": "eboot.bin",
+  "mods": [
+    {
+      "name": "TRAINER INFO (read only)",
+      "description": "This trainer has been partially tested on version 01.21 and seem to work fine. Please let me know if there is any issue. Be sure to read the comment on each individual cheat, if a comment is available. Trainer was made on CUSA18723 but it's multiCUSA compatible and should work on all CUSAs version 01.21 and partially on older and future versions of the game. Enjoy! :)",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F13FF",
+          "on": "00",
+          "off": "00"
         }
-
-        function update(immediate = false) {
-            const text = textarea.value;
-            // Add a newline to the end to fix a highlight.js bug where
-            // the last line isn't highlighted if it doesn't end with a newline.
-            code.textContent = text + '\n';
-            
-            if (idleCallbackId) cancelIdleCallback(idleCallbackId);
-
-            if(immediate) {
-                 highlightSyntax();
-            } else {
-                idleCallbackId = requestIdleCallback(highlightSyntax);
-            }
+      ]
+    },
+    {
+      "name": "Master Code (Must be enabled all the time)",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F1400",
+          "on": "4C890D59EC5000C5FA114DFCE921C2AAFD",
+          "off": "0000000000000000000000000000000000"
+        },
+        {
+          "offset": "B9D62D",
+          "on": "E9CE3D5502",
+          "off": "C5FA114DFC"
+        },
+        {
+          "offset": "3600078",
+          "on": "0000",
+          "off": "0000"
+        },
+        {
+          "offset": "360007A",
+          "on": "0000",
+          "off": "0000"
+        },
+        {
+          "offset": "360007C",
+          "on": "0000",
+          "off": "0000"
+        },
+        {
+          "offset": "30F149F",
+          "on": "483B3DCAEB5000741D483B3DB9EB500074244883FA00742E66833DBDEB500000742431F6EB2066833DABEB50000074168BB74C01000066833D9DEB50000074068BB74C01000089B748010000E980B694FD",
+          "off": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "A3CB6A",
+          "on": "E930496B0290",
+          "off": "89B748010000"
+        },
+        {
+          "offset": "3600080",
+          "on": "0F27000000000000",
+          "off": "0F27000000000000"
+        },
+        {
+          "offset": "3600088",
+          "on": "E703000000000000",
+          "off": "E703000000000000"
+        },
+        {
+          "offset": "3600090",
+          "on": "E703000000000000",
+          "off": "E703000000000000"
+        },
+        {
+          "offset": "30F1510",
+          "on": "4983FB0075248B0564EB50008987540100008B0560EB50008987600100008B055CEB500089876C0100008B8754010000C3",
+          "off": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "A3B2C0",
+          "on": "E94B626B0290",
+          "off": "8B8754010000"
         }
-
-        function syncScroll() {
-            pre.scrollTop = textarea.scrollTop;
-            pre.scrollLeft = textarea.scrollLeft;
+      ]
+    },
+    {
+      "name": "--Infinite_HP",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600078",
+          "on": "0100",
+          "off": "0000"
         }
-
-        textarea.addEventListener('input', () => update());
-        textarea.addEventListener('scroll', syncScroll);
-
-        // Store the update function to be called externally
-        editorMap.set(textarea.id, update);
-    }
-    
-    document.querySelectorAll('.editor-container').forEach(initEditor);
-    
-    // --- Application Logic ---
-    const createDownloadLink = (strContents, filename) => {
-      const blob = new Blob([strContents], { type: 'text/plain' });
-      const tempLink = document.createElement('a');
-      tempLink.setAttribute('href', URL.createObjectURL(blob));
-      tempLink.setAttribute('download', filename);
-      return tempLink;
-    }
-
-    const goldHenFilename = (jsonObj) => {
-      const process = jsonObj.process === 'eboot.bin' ? '' : `_${jsonObj.process}`;
-      const cusa = jsonObj.id;
-      const version = jsonObj.version;
-      return `${cusa}_${version}${process}.json`;
-    }
-
-    const shnFilename = (shnStr) => {
-      try {
-          const xmlDoc = (new DOMParser()).parseFromString(shnStr, 'text/xml');
-          const trainerEle = xmlDoc.querySelector('Trainer');
-          if (!trainerEle) return 'cheats.shn';
-          const game = (trainerEle.attributes['Game']?.value || 'Game').replaceAll(/[^\w\d]/g, '');
-          const creator = trainerEle.attributes['Moder']?.value || 'Creator';
-          const cusa = trainerEle.attributes['Cusa']?.value || 'CUSAXXXXX';
-          const version = trainerEle.attributes['Version']?.value || '1.00';
-          const FWv = document.getElementById('fwv').value || '9.00';
-          return `${game}_${cusa}_${version}_${creator}_${FWv}.shn`;
-      } catch (e) {
-          console.error("Error parsing SHN filename:", e);
-          return 'cheats.shn';
-      }
-    }
-    
-    const addOffset = (offsetStr) => (parseInt(offsetStr, 16) + 0x400000).toString(16).toUpperCase();
-    const subOffset = (offsetStr) => (parseInt(offsetStr, 16) - 0x400000).toString(16).toUpperCase();
-    const addLines = (noLines) => noLines?.match(/.{2}/g)?.join('-') || '';
-    const onlyHex = (str) => str?.replaceAll(/[^a-zA-Z0-9]/g, '') || '';
-
-    const toSHN = (jsonObj, toSubOffset = false) => {
-      const genre = document.getElementById('genre').value || 'Adventure';
-      let xmlStr = `<?xml version="1.0" encoding="utf-16"?>
-<Trainer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Game="${jsonObj.name}" Moder="${jsonObj.credits.join(', ')}" Cusa="${jsonObj.id}" Version="${jsonObj.version}" Process="${jsonObj.process}">
-  <Genres Name="${genre}" />
-  <Items />`;
-      let cheats = ''
-      jsonObj.mods.forEach(jMod => {
-        cheats += `\n  <Cheat Text="${jMod.name}" Description="${jMod.description ? jMod.description : ''}">\n`;
-        jMod.memory.forEach(jMem => {
-          cheats += `    <Cheatline>
-      <Section>0</Section>
-      <Offset>${toSubOffset ? subOffset(jMem.offset) : jMem.offset}</Offset>
-      <ValueOn>${addLines(jMem.on)}</ValueOn>
-      <ValueOff>${addLines(jMem.off)}</ValueOff>
-    </Cheatline>\n`
-        });
-        cheats += `  </Cheat>`
-      });
-      xmlStr += cheats + '\n</Trainer>';
-      return xmlStr;
-    }
-
-    const changeJsonOffset = (jObj, toAddOffset = false) => {
-      const jsonObj = JSON.parse(JSON.stringify(jObj)); // Deep copy
-      jsonObj.mods.forEach((mod) => {
-        mod.memory.forEach((mem) => {
-          mem.offset = toAddOffset ? addOffset(mem.offset) : subOffset(mem.offset);
-        });
-      });
-      return jsonObj;
-    }
-
-    const shnToJson = (isToolbox) => {
-        const xmlStr = document.getElementById('shn-textarea').value;
-        const xmlDoc = (new DOMParser()).parseFromString(xmlStr, 'text/xml');
-        const trainerEle = xmlDoc.querySelector('Trainer');
-        const jsonObj = {
-            name: trainerEle.attributes['Game']?.value,
-            id: trainerEle.attributes['Cusa']?.value,
-            version: trainerEle.attributes['Version']?.value,
-            process: trainerEle.attributes['Process']?.value,
-            mods: [],
-            credits: trainerEle.attributes['Moder']?.value.split(/\, ?/g) || []
-        };
-        const cheats = xmlDoc.querySelectorAll('Cheat');
-        cheats.forEach(cheat => {
-            const mod = {
-                name: cheat.attributes['Text']?.value,
-                description: cheat.attributes['Description'] ? cheat.attributes['Description'].value : "none",
-                type: 'checkbox',
-                memory: []
-            };
-            if (isToolbox) {
-                mod.hint = 'null';
-            }
-            cheat.querySelectorAll('Cheatline').forEach(cheatline => {
-                const mem = {
-                    offset: cheatline.querySelector('Offset')?.textContent || '0',
-                    on: onlyHex(cheatline.querySelector('ValueOn')?.textContent || ''),
-                    off: onlyHex(cheatline.querySelector('ValueOff')?.textContent || '')
-                };
-                mod.memory.push(mem);
-            });
-            jsonObj.mods.push(mod);
-        });
-        return jsonObj;
-    }
-    
-    const setOG = (jsonObj) => {
-        const textarea = document.getElementById('og-textarea');
-        textarea.value = JSON.stringify(jsonObj, null, 2);
-        editorMap.get('og-textarea')?.(true); // Trigger immediate highlight
-        document.querySelector('#OG .DL-line p').textContent = `Filename: ${goldHenFilename(jsonObj)}`;
-    }
-    const setGoldHEN = (jsonObj) => {
-        const textarea = document.getElementById('goldhen-textarea');
-        textarea.value = JSON.stringify(jsonObj, null, 2);
-        editorMap.get('goldhen-textarea')?.(true);
-        document.querySelector('#GoldHEN .DL-line p').textContent = `Filename: ${goldHenFilename(jsonObj)}`;
-    }
-    const setSHN = (shnStr) => {
-        const textarea = document.getElementById('shn-textarea');
-        textarea.value = shnStr;
-        editorMap.get('shn-textarea')?.(true);
-        document.querySelector('#SHN .DL-line p').textContent = `Filename: ${shnFilename(shnStr)}`;
-    }
-    
-    const convertOG = (toType) => {
-      const ogText = document.getElementById('og-textarea').value;
-      if (!ogText.trim()) return;
-      try {
-        const jsonObj = JSON.parse(ogText);
-        if (toType === 'GoldHEN') setGoldHEN(changeJsonOffset(jsonObj));
-        else if (toType === 'SHN') setSHN(toSHN(jsonObj));
-        else { // 'both'
-          setGoldHEN(changeJsonOffset(jsonObj));
-          setSHN(toSHN(jsonObj));
+      ]
+    },
+    {
+      "name": "--Infinite_Horse_HP",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "360007A",
+          "on": "0100",
+          "off": "0000"
         }
-      } catch (e) { alert("Invalid JSON in Absolute Address (Toolbox) input: " + e.message); }
-    }
-
-    const convertGoldHEN = (toType) => {
-      const goldhenText = document.getElementById('goldhen-textarea').value;
-      if (!goldhenText.trim()) return;
-      try {
-        const jsonObj = JSON.parse(goldhenText);
-        if (toType === 'OG') setOG(changeJsonOffset(jsonObj, true));
-        else if (toType === 'SHN') setSHN(toSHN(jsonObj, true));
-        else { // 'both'
-          setOG(changeJsonOffset(jsonObj, true));
-          setSHN(toSHN(jsonObj, true));
+      ]
+    },
+    {
+      "name": "--One_Hit_Kill",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "360007C",
+          "on": "0100",
+          "off": "0000"
         }
-      } catch (e) { alert("Invalid JSON in Relative Address (GoldHEN) input: " + e.message); }
-    }
-
-    const convertSHN = (toType) => {
-      const shnText = document.getElementById('shn-textarea').value;
-      if (!shnText.trim()) return;
-      try {
-        if (toType === 'OG') setOG(changeJsonOffset(shnToJson(true), true));
-        else if (toType === 'GoldHEN') setGoldHEN(shnToJson(false));
-        else { // 'both'
-          setOG(changeJsonOffset(shnToJson(true), true));
-          setGoldHEN(shnToJson(false));
+      ]
+    },
+    {
+      "name": "--MaxFP",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600088",
+          "on": "E703000000000000",
+          "off": "0000000000000000"
         }
-      } catch (e) { alert("Invalid SHN XML input: " + e.message); }
-    }
-
-    document.getElementById('OG-to-GoldHEN').onclick = () => convertOG('GoldHEN');
-    document.getElementById('OG-to-both').onclick = () => convertOG('both');
-    document.getElementById('OG-to-SHN').onclick = () => convertOG('SHN');
-
-    document.getElementById('GoldHEN-to-OG').onclick = () => convertGoldHEN('OG');
-    document.getElementById('GoldHEN-to-both').onclick = () => convertGoldHEN('both');
-    document.getElementById('GoldHEN-to-SHN').onclick = () => convertGoldHEN('SHN');
-
-    document.getElementById('SHN-to-OG').onclick = () => convertSHN('OG');
-    document.getElementById('SHN-to-both').onclick = () => convertSHN('both');
-    document.getElementById('SHN-to-GoldHEN').onclick = () => convertSHN('GoldHEN');
-
-    const downloadHandler = (textareaId, filenameSelector) => {
-        const content = document.getElementById(textareaId).value;
-        if (!content.trim()) return;
-        try {
-            const filename = document.querySelector(filenameSelector).textContent.replace('Filename: ', '');
-            const downloadLink = createDownloadLink(content, filename);
-            downloadLink.click();
-            URL.revokeObjectURL(downloadLink.href);
-        } catch (e) { alert(`Error creating download file.`); }
-    };
-    
-    document.querySelector('#OG .DL-line button').onclick = () => downloadHandler('og-textarea', '#OG .DL-line p');
-    document.querySelector('#GoldHEN .DL-line button').onclick = () => downloadHandler('goldhen-textarea', '#GoldHEN .DL-line p');
-    document.querySelector('#SHN .DL-line button').onclick = () => downloadHandler('shn-textarea', '#SHN .DL-line p');
-    
-    const clearEditorAndFilename = (cardId, textareaId) => {
-        const textarea = document.getElementById(textareaId);
-        textarea.value = '';
-        editorMap.get(textareaId)?.(true);
-        document.querySelector(`#${cardId} .DL-line p`).textContent = 'Filename: N/A';
-    };
-
-    document.querySelector('#OG .clear-actions button').onclick = () => clearEditorAndFilename('OG', 'og-textarea');
-    document.querySelector('#GoldHEN .clear-actions button:first-child').onclick = () => clearEditorAndFilename('GoldHEN', 'goldhen-textarea');
-    document.querySelector('#SHN .clear-actions button').onclick = () => clearEditorAndFilename('SHN', 'shn-textarea');
-
-    document.getElementById('clear-all-btn').onclick = () => {
-      clearEditorAndFilename('OG', 'og-textarea');
-      clearEditorAndFilename('GoldHEN', 'goldhen-textarea');
-      clearEditorAndFilename('SHN', 'shn-textarea');
-    };
-
-    // --- Theme Toggler ---
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const themeIcon = themeToggleBtn.querySelector('i');
-    const currentTheme = localStorage.getItem('theme');
-
-    const setLightTheme = () => {
-        document.body.classList.add('light-mode');
-        themeIcon.classList.remove('fa-sun');
-        themeIcon.classList.add('fa-moon');
-        localStorage.setItem('theme', 'light');
-    };
-
-    const setDarkTheme = () => {
-        document.body.classList.remove('light-mode');
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-        localStorage.setItem('theme', 'dark');
-    };
-
-    if (currentTheme === 'light') {
-        setLightTheme();
-    }
-
-    themeToggleBtn.addEventListener('click', () => {
-        if (document.body.classList.contains('light-mode')) {
-            setDarkTheme();
-        } else {
-            setLightTheme();
+      ]
+    },
+    {
+      "name": "--MaxHP",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600080",
+          "on": "0F27000000000000",
+          "off": "0000000000000000"
         }
-    });
-
-  </script>
-</body>
-</html>
+      ]
+    },
+    {
+      "name": "--MaxStamina",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600090",
+          "on": "E703000000000000",
+          "off": "0000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "Set Stats",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600098",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        },
+        {
+          "offset": "36000A0",
+          "on": "FFC99A3B00000000",
+          "off": "FFC99A3B00000000"
+        },
+        {
+          "offset": "36000A8",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        },
+        {
+          "offset": "36000B0",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        },
+        {
+          "offset": "36000B8",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        },
+        {
+          "offset": "36000C0",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        },
+        {
+          "offset": "36000C8",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        },
+        {
+          "offset": "36000D0",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        },
+        {
+          "offset": "36000D8",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        },
+        {
+          "offset": "36000E0",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        },
+        {
+          "offset": "30F1561",
+          "on": "8B0541EB500089433C8B0540EB50008943408B053FEB50008943448B053EEB50008943488B053DEB500089434C8B053CEB50008943508B053BEB50008943548B053AEB50008943588B05E9EA50008943688B05E8EA500089436C4189876C010000E94FF11DFE",
+          "off": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "12D070C",
+          "on": "E9500EE2019090909090",
+          "off": "8B433C4189876C010000"
+        }
+      ]
+    },
+    {
+      "name": "--Arcane",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000E0",
+          "on": "6300000000000000",
+          "off": "0000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "--Dexterity",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000C8",
+          "on": "6300000000000000",
+          "off": "0000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "--Endurance",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000B8",
+          "on": "6300000000000000",
+          "off": "0000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "--Faith",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000D8",
+          "on": "6300000000000000",
+          "off": "0000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "--Intelligence",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000D0",
+          "on": "6300000000000000",
+          "off": "0000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "--Level",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600098",
+          "on": "6300000000000000",
+          "off": "0000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "--Mind",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000B0",
+          "on": "6300000000000000",
+          "off": "0000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "--Runes",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000A0",
+          "on": "FFC99A3B00000000",
+          "off": "FFC99A3B00000000"
+        }
+      ]
+    },
+    {
+      "name": "--Strength",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000C0",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        }
+      ]
+    },
+    {
+      "name": "--Vigor",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000A8",
+          "on": "6300000000000000",
+          "off": "6300000000000000"
+        }
+      ]
+    },
+    {
+      "name": "Movement Speed Multiplier",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F15E7",
+          "on": "488905FAEA500080B8B017000000E90A8EA2FD",
+          "off": "00000000000000000000000000000000000000"
+        },
+        {
+          "offset": "30F161A",
+          "on": "80B9B01700000048890DC8EA5000E9B594A2FD",
+          "off": "00000000000000000000000000000000000000"
+        },
+        {
+          "offset": "36000F8",
+          "on": "0000803F",
+          "off": "0000803F"
+        },
+        {
+          "offset": "36000FC",
+          "on": "0000803F",
+          "off": "0000803F"
+        },
+        {
+          "offset": "3600100",
+          "on": "0000803F",
+          "off": "0000803F"
+        },
+        {
+          "offset": "3600104",
+          "on": "0000803F",
+          "off": "0000803F"
+        },
+        {
+          "offset": "30F164D",
+          "on": "50488B0593EA50004939C67425488B058FEA50004939C67421833D97EA50000075088B058FEA5000EB188B0583EA5000EB108B0573EA5000EB088B056FEA5000EB0041898608180000C4C17A59860818000058E9A22092FD",
+          "off": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "B1A3FD",
+          "on": "E9E5715D029090",
+          "off": "80B8B017000000"
+        },
+        {
+          "offset": "B1AADB",
+          "on": "E93A6B5D029090",
+          "off": "80B9B017000000"
+        },
+        {
+          "offset": "A1373E",
+          "on": "E90ADF6D0290909090",
+          "off": "C4C17A598608180000"
+        }
+      ]
+    },
+    {
+      "name": "--Enemy Speed x0",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600100",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Enemy Speed x1",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600100",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Enemy Speed x2",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600100",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--FreezeEnemy",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600104",
+          "on": "00000000",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Horse Speed x1",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000FC",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Horse Speed x2",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000FC",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Horse Speed x3",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000FC",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Player Speed x1",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000F8",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Player Speed x2",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000F8",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Player Speed x3",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "36000F8",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "Untouchable v01.21",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F16C5",
+          "on": "50488B4708488B8090010000488B0048390595E95000750258C348390582E95000587501C3554889E54157E9F17595FD",
+          "off": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "A48CE0",
+          "on": "E9E0896A0290",
+          "off": "554889E54157"
+        }
+      ]
+    },
+    {
+      "name": "No Effects v01.13-v01.21",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F1715",
+          "on": "418B4500418945E44983C504E9B96D8DFD",
+          "off": "0000000000000000000000000000000000"
+        },
+        {
+          "offset": "9C84D7",
+          "on": "E939927202909090",
+          "off": "418945E44983C504"
+        }
+      ]
+    },
+    {
+      "name": "100%% Loot Drop-Rate",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F1746",
+          "on": "4C3B0D13E95000751053BB00007A43660F6EC35BE990B8C5FDC5FA10448818E985B8C5FD",
+          "off": "000000000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "D4CFE9",
+          "on": "E958473A0290",
+          "off": "C5FA10448818"
+        }
+      ]
+    },
+    {
+      "name": "Infinite FP",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F178A",
+          "on": "4983FB007507418B855C01000041898558010000E9ABEC94FD",
+          "off": "00000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "A40447",
+          "on": "E93E136B029090",
+          "off": "41898558010000"
+        }
+      ]
+    },
+    {
+      "name": "Infinite Stamina",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F17C3",
+          "on": "4983FB007507418B856801000041898564010000E9A3F094FD",
+          "off": "00000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "A40878",
+          "on": "E9460F6B029090",
+          "off": "41898564010000"
+        }
+      ]
+    },
+    {
+      "name": "Pause By Controller",
+      "description": "Pause Game: Press Options + Dpad Right UnPause Game: Press Options + Dpad Left Note: Some background elements like flowers and sounds may still play but the game will be paused.",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F17FC",
+          "on": "8A83F808000051418B0E890DFCE8500059E9F75960FF",
+          "off": "00000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "30F1832",
+          "on": "833DCFE8500028750CC705C7E8500001000000EB18813DB7E8500088000000750CC705AFE8500000000000EB00833DA6E8500000740D4180BD5803000002E9C6C01AFE4180BD5803000000E9B9C01AFE",
+          "off": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "26F7203",
+          "on": "E9F4A59F0090",
+          "off": "8A83F8080000"
+        },
+        {
+          "offset": "129D933",
+          "on": "E9FA3EE501909090",
+          "off": "4180BD5803000000"
+        }
+      ]
+    },
+    {
+      "name": "Player No Dead v01.21",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "A3CDEB",
+          "on": "90909090909090",
+          "off": "803D76CAF20200"
+        }
+      ]
+    },
+    {
+      "name": "Super Jump",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F18A2",
+          "on": "C683D20100000150488D83D201000048890558E8500058E9AD2E91FD",
+          "off": "00000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "3600118",
+          "on": "0000803F",
+          "off": "0000803F"
+        },
+        {
+          "offset": "360011C",
+          "on": "0000803F",
+          "off": "0000803F"
+        },
+        {
+          "offset": "3600120",
+          "on": "00004040",
+          "off": "00004040"
+        },
+        {
+          "offset": "30F18DE",
+          "on": "48833D2AE8500000746351488B0D20E8500080390159755583BD04FCFFFF007F14D98504FCFFFFD83515E85000D99D04FCFFFFEB38D98500FCFFFFD80DF9E75000D99D00FCFFFFD98508FCFFFFD80DE7E75000D99D08FCFFFFD98504FCFFFFD80DD9E75000D99D04FCFFFFEB00C5F8108D00FCFFFFE9E1DCF3FE",
+          "off": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "A04764",
+          "on": "E939D16E029090",
+          "off": "80B8D101000000"
+        },
+        {
+          "offset": "202F631",
+          "on": "E9A8220C01909090",
+          "off": "C5F8108D00FCFFFF"
+        }
+      ]
+    },
+    {
+      "name": "--Jump Distance x1",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600118",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Jump Distance x5",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600118",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Jump Distance x10",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600118",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Jump Distance x15",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600118",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Jump Distance x20",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600118",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Jump Height x1",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "360011C",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Jump Height x5",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "360011C",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Jump Height x10",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "360011C",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Jump Height x15",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "360011C",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "--Jump Height x20",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "360011C",
+          "on": "0000803F",
+          "off": "0000803F"
+        }
+      ]
+    },
+    {
+      "name": "Unlimited Jumps",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "A04764",
+          "on": "90909090909090",
+          "off": "80B8D101000000"
+        }
+      ]
+    },
+    {
+      "name": "Stealth Mode",
+      "description": "Enemies will be able to see you if and when you attack them.",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "8ECF55",
+          "on": "80BFBA00000001",
+          "off": "80BFBA00000000"
+        }
+      ]
+    },
+    {
+      "name": "Infinite Runes",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "E68B49",
+          "on": "31C990",
+          "off": "4129C8"
+        }
+      ]
+    },
+    {
+      "name": "Max+Inf Items on Get+Use v01.17-v01.21",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "7547E0",
+          "on": "4189C690",
+          "off": "440F42F0"
+        }
+      ]
+    },
+    {
+      "name": "PlayerExterminate (OHK) v01.17-v01.21",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "A4BB18",
+          "on": "0F94C0",
+          "off": "0F95C0"
+        }
+      ]
+    },
+    {
+      "name": "Enemies Dont Attack v01.21",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "82722E",
+          "on": "90909090909090",
+          "off": "803D4026140300"
+        },
+        {
+          "offset": "9A3576",
+          "on": "90909090909090",
+          "off": "803DF862FC0200"
+        }
+      ]
+    },
+    {
+      "name": "Ignore Crafting Item Requirement",
+      "description": "Thanks to fullcodes for originally finding this ported to 1.09 by Rizla.",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "E69A1C",
+          "on": "90909090",
+          "off": "440F4FE0"
+        }
+      ]
+    },
+    {
+      "name": "Ignore Smithing Item Requirement",
+      "description": "Thanks to fullcodes for originally finding this ported to 1.09 by Rizla.",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "EA6960",
+          "on": "4C39C390",
+          "off": "443B430C"
+        }
+      ]
+    },
+    {
+      "name": "Quick Buy+Sell Shop Items",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "E37D65",
+          "on": "41899424B8010000",
+          "off": "41898424B8010000"
+        }
+      ]
+    },
+    {
+      "name": "No Overloaded Weight Slowdown",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F1978",
+          "on": "B80100000089818C010000E95C29C0FD",
+          "off": "00000000000000000000000000000000"
+        },
+        {
+          "offset": "CF42DE",
+          "on": "E995D63F0290",
+          "off": "89818C010000"
+        }
+      ]
+    },
+    {
+      "name": "Set Time of Day - 24hrs clock",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600124",
+          "on": "00004041",
+          "off": "00004041"
+        },
+        {
+          "offset": "30F19A8",
+          "on": "8B0D76E7500041898F04010000E9719613FE",
+          "off": "000000000000000000000000000000000000"
+        },
+        {
+          "offset": "122B024",
+          "on": "E97F69EC019090",
+          "off": "41898F04010000"
+        }
+      ]
+    },
+    {
+      "name": "--Hour: 0",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600124",
+          "on": "00004041",
+          "off": "00004041"
+        }
+      ]
+    },
+    {
+      "name": "--Hour: 6",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600124",
+          "on": "00004041",
+          "off": "00004041"
+        }
+      ]
+    },
+    {
+      "name": "--Hour: 12",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600124",
+          "on": "00004041",
+          "off": "00004041"
+        }
+      ]
+    },
+    {
+      "name": "--Hour: 18",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "3600124",
+          "on": "00004041",
+          "off": "00004041"
+        }
+      ]
+    },
+    {
+      "name": "HorsePointer_MC",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F1431",
+          "on": "488B809001000053488B1848891D25EC50005BE9D425C4FD",
+          "off": "000000000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "D33A16",
+          "on": "E916DA3B029090",
+          "off": "488B8090010000"
+        }
+      ]
+    },
+    {
+      "name": "PlayerBase_MC",
+      "description": "",
+      "type": "checkbox",
+      "memory": [
+        {
+          "offset": "30F1469",
+          "on": "498B8790010000488B00488905F6EB5000E969951CFE",
+          "off": "00000000000000000000000000000000000000000000"
+        },
+        {
+          "offset": "12BA9DE",
+          "on": "E9866AE3019090909090",
+          "off": "498B8790010000488B00"
+        }
+      ]
+    }
+  ],
+  "credits": [
+    "Pharaoh2k",
+    "Rizla",
+    "Fullcodes"
+  ]
+}
