@@ -1166,7 +1166,7 @@
                 for (const pluginInfo of manifest.plugins) {
                     if (!pluginInfo.enabled) continue;
                     try {
-                        const pluginDataUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${GITHUB_BRANCH}/plugins/${pluginInfo.folder}/plugin.json`;
+                        const pluginDataUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/refs/heads/${GITHUB_BRANCH}/Plugins/${pluginInfo.name}/plugin.json`;
                         const pluginResponse = await fetch(pluginDataUrl);
                         if (pluginResponse.ok) {
                             const pluginData = await pluginResponse.json();
