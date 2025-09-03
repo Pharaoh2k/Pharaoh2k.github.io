@@ -10,7 +10,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --primary: #5865F2;
             --secondary: #EB459E;
@@ -21,7 +20,6 @@
             --glass: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: var(--darker);
@@ -29,7 +27,6 @@
             overflow-x: hidden;
             position: relative;
         }
-
         /* Animated Background */
         .bg-animation {
             position: fixed;
@@ -43,13 +40,11 @@
             animation: gradientShift 20s ease infinite;
             opacity: 0.1;
         }
-
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         /* Floating Particles */
         .particles {
             position: fixed;
@@ -60,7 +55,6 @@
             pointer-events: none;
             z-index: -1;
         }
-
         .particle {
             position: absolute;
             width: 4px;
@@ -70,7 +64,6 @@
             animation: float 20s infinite linear;
             opacity: 0.3;
         }
-
         @keyframes float {
             from {
                 transform: translateY(100vh) translateX(0) rotate(0deg);
@@ -83,7 +76,6 @@
                 opacity: 0;
             }
         }
-
         /* Navigation */
         nav {
             position: fixed;
@@ -96,12 +88,10 @@
             z-index: 1000;
             transition: all 0.3s ease;
         }
-
         nav.scrolled {
             padding: 15px 50px;
             background: rgba(12, 14, 22, 0.95);
         }
-
         .nav-content {
             max-width: 1400px;
             margin: 0 auto;
@@ -109,7 +99,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .logo {
             display: flex;
             align-items: center;
@@ -117,7 +106,6 @@
             font-size: 24px;
             font-weight: 800;
         }
-
         .logo-text {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
@@ -126,7 +114,6 @@
             text-shadow: 0 0 30px rgba(88, 101, 242, 0.5);
             animation: glow 2s ease-in-out infinite alternate;
         }
-
         .logo-icon {
             width: 40px;
             height: 40px;
@@ -136,7 +123,6 @@
             transition: all 0.3s ease;
             overflow: visible;
         }
-
         .logo-icon::before {
             content: '';
             position: absolute;
@@ -151,7 +137,6 @@
             animation: shimmer 4s ease-in-out infinite;
             pointer-events: none;
         }
-
         @keyframes breathe {
             0%, 100% { 
                 transform: scale(1);
@@ -162,33 +147,27 @@
                 filter: drop-shadow(0 0 20px rgba(62, 130, 229, 0.8));
             }
         }
-
         @keyframes shimmer {
             0% { transform: translateX(-200%); }
             50%, 100% { transform: translateX(200%); }
         }
-
         .logo:hover .logo-icon {
             transform: scale(1.1);
             filter: drop-shadow(0 0 25px rgba(62, 130, 229, 1));
         }
-
         @keyframes rotate-slow {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
         @keyframes glow {
             from { filter: brightness(1); }
             to { filter: brightness(1.2); }
         }
-
         .nav-links {
             display: flex;
             gap: 30px;
             list-style: none;
         }
-
         .nav-links a {
             color: var(--light);
             text-decoration: none;
@@ -196,7 +175,6 @@
             position: relative;
             transition: all 0.3s ease;
         }
-
         .nav-links a::after {
             content: '';
             position: absolute;
@@ -207,11 +185,9 @@
             background: var(--accent);
             transition: width 0.3s ease;
         }
-
         .nav-links a:hover::after {
             width: 100%;
         }
-
         /* Hero Section */
         .hero {
             min-height: 100vh;
@@ -221,13 +197,11 @@
             position: relative;
             padding: 100px 20px;
         }
-
         .hero-content {
             text-align: center;
             z-index: 1;
             animation: slideUp 1s ease;
         }
-
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -238,7 +212,6 @@
                 transform: translateY(0);
             }
         }
-
         .hero h1 {
             font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 900;
@@ -251,32 +224,27 @@
             animation: gradientText 3s ease infinite;
             text-shadow: 0 0 80px rgba(88, 101, 242, 0.5);
         }
-
         @keyframes gradientText {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         .hero-subtitle {
             font-size: 1.5rem;
             color: rgba(255, 255, 255, 0.8);
             margin-bottom: 40px;
             animation: fadeIn 1.5s ease 0.5s both;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
         .hero-buttons {
             display: flex;
             gap: 20px;
             justify-content: center;
             animation: fadeIn 1.5s ease 1s both;
         }
-
         .btn {
             padding: 15px 40px;
             font-size: 18px;
@@ -292,31 +260,26 @@
             position: relative;
             overflow: hidden;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             box-shadow: 0 10px 30px rgba(88, 101, 242, 0.3);
         }
-
         .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(88, 101, 242, 0.4);
         }
-
         .btn-secondary {
             background: var(--glass);
             color: white;
             border: 2px solid var(--glass-border);
             backdrop-filter: blur(10px);
         }
-
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.1);
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
         }
-
         .btn::before {
             content: '';
             position: absolute;
@@ -329,19 +292,16 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
-
         .btn:active::before {
             width: 300px;
             height: 300px;
         }
-
         /* Plugins Section */
         .plugins {
             padding: 100px 20px;
             max-width: 1400px;
             margin: 0 auto;
         }
-
         .section-title {
             text-align: center;
             font-size: 3rem;
@@ -352,20 +312,17 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .section-subtitle {
             text-align: center;
             font-size: 1.2rem;
             color: rgba(255, 255, 255, 0.7);
             margin-bottom: 60px;
         }
-
         .plugin-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
         }
-
         .plugin-card {
             background: var(--glass);
             backdrop-filter: blur(20px);
@@ -378,7 +335,6 @@
             cursor: pointer;
             user-select: none;
         }
-
         .plugin-card::before {
             content: '';
             position: absolute;
@@ -392,29 +348,24 @@
             z-index: -1;
             transition: opacity 0.3s ease;
         }
-
         .plugin-card:hover::before {
             opacity: 1;
         }
-
         .plugin-card:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: 0 20px 40px rgba(88, 101, 242, 0.3);
         }
-
         .plugin-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
-
         .plugin-name {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--light);
         }
-
         .plugin-status {
             padding: 5px 15px;
             border-radius: 20px;
@@ -422,36 +373,30 @@
             font-weight: 600;
             animation: pulse 2s infinite;
         }
-
         .status-active {
             background: rgba(0, 212, 170, 0.2);
             color: var(--accent);
             border: 1px solid var(--accent);
         }
-
         .status-beta {
             background: rgba(235, 69, 158, 0.2);
             color: var(--secondary);
             border: 1px solid var(--secondary);
         }
-
         .status-development {
             background: rgba(88, 101, 242, 0.2);
             color: var(--primary);
             border: 1px solid var(--primary);
         }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
         }
-
         .plugin-description {
             color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
             margin-bottom: 20px;
         }
-
         .plugin-features {
             list-style: none;
             margin-bottom: 20px;
@@ -459,26 +404,21 @@
             overflow-y: auto;
             padding-right: 5px;
         }
-
         .plugin-features::-webkit-scrollbar {
             width: 6px;
         }
-
         .plugin-features::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 3px;
         }
-
         .plugin-features::-webkit-scrollbar-thumb {
             background: rgba(88, 101, 242, 0.3);
             border-radius: 3px;
             transition: background 0.3s ease;
         }
-
         .plugin-features::-webkit-scrollbar-thumb:hover {
             background: rgba(88, 101, 242, 0.5);
         }
-
         .plugin-features li {
             padding: 5px 0;
             color: rgba(255, 255, 255, 0.7);
@@ -486,17 +426,14 @@
             align-items: center;
             gap: 10px;
         }
-
         .plugin-features li::before {
             content: '✨';
             font-size: 14px;
         }
-
         .plugin-actions {
             display: flex;
             gap: 10px;
         }
-
         .plugin-btn {
             flex: 1;
             padding: 10px 20px;
@@ -512,19 +449,16 @@
             position: relative;
             z-index: 10;
         }
-
         .plugin-btn:hover {
             background: rgba(88, 101, 242, 0.2);
             border-color: var(--primary);
             transform: translateY(-2px);
         }
-
         /* Features Section */
         .features {
             padding: 100px 20px;
             background: linear-gradient(180deg, transparent, rgba(88, 101, 242, 0.05), transparent);
         }
-
         .features-grid {
             max-width: 1200px;
             margin: 0 auto;
@@ -532,7 +466,6 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 40px;
         }
-
         .feature-card {
             text-align: center;
             padding: 30px;
@@ -542,36 +475,30 @@
             border-radius: 20px;
             transition: all 0.3s ease;
         }
-
         .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(88, 101, 242, 0.2);
         }
-
         .feature-icon {
             font-size: 3rem;
             margin-bottom: 20px;
             display: inline-block;
             animation: bounce 2s infinite;
         }
-
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
-
         .feature-title {
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 15px;
             color: var(--light);
         }
-
         .feature-description {
             color: rgba(255, 255, 255, 0.7);
             line-height: 1.6;
         }
-
         /* Stats Section */
         .stats {
             padding: 80px 20px;
@@ -580,7 +507,6 @@
             border-top: 1px solid var(--glass-border);
             border-bottom: 1px solid var(--glass-border);
         }
-
         .stats-grid {
             max-width: 1000px;
             margin: 0 auto;
@@ -589,11 +515,9 @@
             gap: 40px;
             text-align: center;
         }
-
         .stat-item {
             position: relative;
         }
-
         .stat-number {
             font-size: 3rem;
             font-weight: 900;
@@ -603,19 +527,16 @@
             background-clip: text;
             margin-bottom: 10px;
         }
-
         .stat-label {
             color: rgba(255, 255, 255, 0.7);
             font-size: 1.1rem;
             font-weight: 600;
         }
-
         /* Community Section */
         .community {
             padding: 100px 20px;
             text-align: center;
         }
-
         .discord-card {
             max-width: 600px;
             margin: 0 auto;
@@ -627,7 +548,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .discord-card::before {
             content: '';
             position: absolute;
@@ -639,12 +559,10 @@
             opacity: 0.1;
             animation: rotate 20s linear infinite;
         }
-
         @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
         .discord-title {
             font-size: 2.5rem;
             font-weight: 800;
@@ -654,14 +572,12 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .discord-description {
             font-size: 1.2rem;
             color: rgba(255, 255, 255, 0.8);
             margin-bottom: 30px;
             line-height: 1.6;
         }
-
         /* Modal Styles */
         .modal-overlay {
             position: fixed;
@@ -678,12 +594,10 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-
         .modal-overlay.active {
             display: flex;
             opacity: 1;
         }
-
         .modal {
             background: linear-gradient(135deg, rgba(12, 14, 22, 0.95), rgba(6, 8, 16, 0.95));
             backdrop-filter: blur(20px);
@@ -697,7 +611,6 @@
             animation: modalSlideIn 0.3s ease;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
         }
-
         @keyframes modalSlideIn {
             from {
                 opacity: 0;
@@ -708,14 +621,12 @@
                 transform: translateY(0) scale(1);
             }
         }
-
         .modal-header {
             padding: 30px;
             background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(235, 69, 158, 0.1));
             border-bottom: 1px solid var(--glass-border);
             position: relative;
         }
-
         .modal-close {
             position: absolute;
             top: 20px;
@@ -733,12 +644,10 @@
             font-size: 24px;
             color: var(--light);
         }
-
         .modal-close:hover {
             background: rgba(235, 69, 158, 0.2);
             transform: scale(1.1) rotate(90deg);
         }
-
         .modal-title {
             font-size: 2rem;
             font-weight: 800;
@@ -748,69 +657,57 @@
             background-clip: text;
             margin-bottom: 10px;
         }
-
         .modal-status-row {
             display: flex;
             gap: 15px;
             align-items: center;
             flex-wrap: wrap;
         }
-
         .modal-status {
             padding: 8px 20px;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 600;
         }
-
         .status-working {
             background: rgba(0, 212, 170, 0.2);
             color: var(--accent);
             border: 1px solid var(--accent);
         }
-
         .status-testing {
             background: rgba(255, 193, 7, 0.2);
             color: #FFC107;
             border: 1px solid #FFC107;
         }
-
         .status-in-progress {
             background: rgba(88, 101, 242, 0.2);
             color: var(--primary);
             border: 1px solid var(--primary);
         }
-
         .modal-status.status-active {
             background: rgba(0, 212, 170, 0.2);
             color: var(--accent);
             border: 1px solid var(--accent);
         }
-
         .modal-status.status-beta {
             background: rgba(235, 69, 158, 0.2);
             color: var(--secondary);
             border: 1px solid var(--secondary);
         }
-
         .modal-status.status-development {
             background: rgba(88, 101, 242, 0.2);
             color: var(--primary);
             border: 1px solid var(--primary);
         }
-
         .modal-body {
             padding: 30px;
         }
-
         .modal-section {
             margin-bottom: 30px;
         }
-
         .modal-section:last-child {
             margin-bottom: 0;
         }
-
         .modal-section-title {
             font-size: 1.2rem;
             font-weight: 700;
@@ -820,7 +717,6 @@
             align-items: center;
             gap: 10px;
         }
-
         .modal-section-title::before {
             content: '';
             width: 4px;
@@ -828,26 +724,22 @@
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: 2px;
         }
-
         .modal-description {
             color: rgba(255, 255, 255, 0.9);
             line-height: 1.8;
             font-size: 1.05rem;
         }
-
         .modal-meta {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
         }
-
         .meta-item {
             background: var(--glass);
             padding: 15px;
             border-radius: 12px;
             border: 1px solid var(--glass-border);
         }
-
         .meta-label {
             font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.5);
@@ -855,20 +747,17 @@
             letter-spacing: 1px;
             margin-bottom: 5px;
         }
-
         .meta-value {
             font-size: 1rem;
             color: var(--light);
             font-weight: 600;
         }
-
         .modal-features {
             list-style: none;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 12px;
         }
-
         .modal-features li {
             padding: 12px 15px;
             background: var(--glass);
@@ -879,23 +768,19 @@
             gap: 10px;
             transition: all 0.3s ease;
         }
-
         .modal-features li:hover {
             background: rgba(88, 101, 242, 0.1);
             transform: translateX(5px);
         }
-
         .modal-features li::before {
             content: '✨';
             font-size: 16px;
         }
-
         .modal-actions {
             display: flex;
             gap: 15px;
             margin-top: 20px;
         }
-
         .modal-btn {
             flex: 1;
             padding: 15px 30px;
@@ -913,53 +798,43 @@
             font-family: inherit;
             color: white;
         }
-
         .modal-btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
         }
-
         .modal-btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(88, 101, 242, 0.3);
         }
-
         .modal-btn-secondary {
             background: var(--glass);
             color: white;
             border: 2px solid var(--glass-border);
         }
-
         button.modal-btn-secondary {
             background: var(--glass);
             color: white;
             border: 2px solid var(--glass-border);
         }
-
         .modal-btn-secondary:hover {
             background: rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
         }
-
         /* Scrollbar for modal */
         .modal::-webkit-scrollbar {
             width: 8px;
         }
-
         .modal::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
         }
-
         .modal::-webkit-scrollbar-thumb {
             background: rgba(88, 101, 242, 0.3);
             border-radius: 4px;
         }
-
         .modal::-webkit-scrollbar-thumb:hover {
             background: rgba(88, 101, 242, 0.5);
         }
-
         /* Footer */
         footer {
             padding: 50px 20px;
@@ -967,19 +842,16 @@
             border-top: 1px solid var(--glass-border);
             text-align: center;
         }
-
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
         }
-
         .social-links {
             display: flex;
             justify-content: center;
             gap: 30px;
             margin-bottom: 30px;
         }
-
         .social-link {
             font-size: 2rem;
             color: var(--light);
@@ -989,50 +861,40 @@
             align-items: center;
             justify-content: center;
         }
-
         .social-link svg {
             width: 32px;
             height: 32px;
             transition: all 0.3s ease;
         }
-
         .social-link:hover {
             transform: translateY(-5px) scale(1.2);
             color: var(--primary);
         }
-
         .social-link:hover svg {
             filter: drop-shadow(0 0 10px rgba(88, 101, 242, 0.5));
         }
-
         .footer-text {
             color: rgba(255, 255, 255, 0.5);
             font-size: 1rem;
         }
-
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
         /* Responsive */
         @media (max-width: 768px) {
             nav {
                 padding: 15px 20px;
             }
-
             .nav-links {
                 display: none;
             }
-
             .hero h1 {
                 font-size: 3rem;
             }
-
             .hero-buttons {
                 flex-direction: column;
             }
-
             .plugin-grid {
                 grid-template-columns: 1fr;
             }
@@ -1042,7 +904,6 @@
 <body>
     <div class="bg-animation"></div>
     <div class="particles" id="particles"></div>
-
     <nav id="navbar">
         <div class="nav-content">
             <div class="logo">
@@ -1062,7 +923,6 @@
             </ul>
         </div>
     </nav>
-
     <section class="hero" id="home">
         <div class="hero-content">
             <h1>BetterDiscord Stuff</h1>
@@ -1077,11 +937,9 @@
             </div>
         </div>
     </section>
-
     <section class="plugins" id="plugins">
         <h2 class="section-title">Featured Plugins</h2>
         <p class="section-subtitle">Powerful tools to customize and enhance Discord</p>
-        
         <div class="plugin-grid" id="pluginGrid">
             <!-- Plugins will be dynamically loaded here -->
             <div class="plugin-card" style="background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(235, 69, 158, 0.1)); border: 2px solid var(--primary);">
@@ -1097,30 +955,25 @@
             </div>
         </div>
     </section>
-
     <section class="features" id="features">
         <h2 class="section-title">Why Choose My Plugins?</h2>
         <p class="section-subtitle">Built with performance and user experience in mind</p>
-        
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">⚡</div>
                 <h3 class="feature-title">Lightning Fast</h3>
                 <p class="feature-description">Optimized code ensures minimal impact on Discord's performance</p>
             </div>
-            
             <div class="feature-card">
                 <div class="feature-icon">🔒</div>
                 <h3 class="feature-title">Secure & Safe</h3>
                 <p class="feature-description">Source code available on GitHub with regular security updates and reviews</p>
             </div>
-            
             <div class="feature-card">
                 <div class="feature-icon">🎨</div>
                 <h3 class="feature-title">Beautiful UI</h3>
                 <p class="feature-description">Seamless integration with Discord's design language</p>
             </div>
-            
             <div class="feature-card">
                 <div class="feature-icon">🔧</div>
                 <h3 class="feature-title">Customizable</h3>
@@ -1128,7 +981,6 @@
             </div>
         </div>
     </section>
-
     <section class="stats">
         <div class="stats-grid">
             <div class="stat-item">
@@ -1149,11 +1001,9 @@
             </div>
         </div>
     </section>
-
     <section class="community" id="community">
         <h2 class="section-title">Join Our Community</h2>
         <p class="section-subtitle">Get support, share ideas, and connect with other users</p>
-        
         <div class="discord-card">
             <h3 class="discord-title">Discord Server</h3>
             <p class="discord-description">
@@ -1164,7 +1014,6 @@
             </a>
         </div>
     </section>
-
     <!-- Modal Overlay -->
     <div id="modalOverlay" class="modal-overlay">
         <div class="modal">
@@ -1181,7 +1030,6 @@
                     <h3 class="modal-section-title">Description</h3>
                     <p class="modal-description" id="modalDescription">Plugin description goes here.</p>
                 </div>
-
                 <div class="modal-section">
                     <h3 class="modal-section-title">Information</h3>
                     <div class="modal-meta">
@@ -1203,7 +1051,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="modal-section">
                     <h3 class="modal-section-title">Features</h3>
                     <ul class="modal-features" id="modalFeatures">
@@ -1211,7 +1058,6 @@
                         <li>Feature 2</li>
                     </ul>
                 </div>
-
                 <div class="modal-section">
                     <div class="modal-actions">
                         <a href="#" id="modalSourceLink" class="modal-btn modal-btn-secondary" target="_blank">
@@ -1233,7 +1079,6 @@
             </div>
         </div>
     </div>
-
     <footer>
         <div class="footer-content">
             <div class="social-links">
@@ -1254,61 +1099,39 @@
             </p>
         </div>
     </footer>
-
     <script>
-        // Configuration
         const GITHUB_USERNAME = 'Pharaoh2k';
-        const GITHUB_REPO = 'BetterDiscord';
-        const GITHUB_BRANCH = 'main'; // or 'master'
-        
-        // Plugin Data Storage
+        const GITHUB_REPO = 'BetterDiscordStuff';
+        const GITHUB_BRANCH = 'main';
         let pluginsData = {};
         let pluginsLoaded = false;
         let currentPluginId = null;
-
-        // Parse URL parameters
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
-
-        // Handle direct plugin links
         function handleDirectPluginLink() {
             const pluginParam = getUrlParameter('plugin');
             if (!pluginParam) return;
-
-            // Normalize the plugin ID (convert to lowercase and add hyphens)
             let normalizedId = pluginParam
                 .replace(/([A-Z])/g, '-$1')
                 .toLowerCase()
                 .replace(/^-/, '')
-                .replace(/-v-?[0-9]+$/i, ''); // Remove version numbers like V2
-
-            // Handle legacy names
+                .replace(/-v-?[0-9]+$/i, '');
             if (normalizedId === 'message-logger' || normalizedId === 'messagelogger' || normalizedId === 'messageloggerv2') {
                 normalizedId = 'tracex';
             }
-
-            // Wait for plugins to load
             const checkInterval = setInterval(() => {
                 if (pluginsLoaded) {
                     clearInterval(checkInterval);
-                    
-                    // Scroll to plugins section
                     const pluginsSection = document.getElementById('plugins');
                     if (pluginsSection) {
                         pluginsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        
-                        // Open modal after scroll animation
                         setTimeout(() => {
-                            // Try to find the plugin with various ID formats
                             let pluginId = null;
-                            
-                            // Check exact match first
                             if (pluginsData[normalizedId]) {
                                 pluginId = normalizedId;
                             } else {
-                                // Try to find a partial match
                                 for (const id in pluginsData) {
                                     if (id.includes(normalizedId.replace(/-/g, '')) || 
                                         normalizedId.includes(id.replace(/-/g, ''))) {
@@ -1317,97 +1140,63 @@
                                     }
                                 }
                             }
-                            
                             if (pluginId) {
                                 openModal(pluginId);
-                                
-                                // Update URL without the parameter after opening
                                 const newUrl = window.location.pathname;
                                 window.history.replaceState({}, document.title, newUrl);
                             } else {
                                 console.warn(`Plugin "${pluginParam}" not found`);
                             }
-                        }, 800); // Wait for scroll animation
+                        }, 800);
                     }
                 }
             }, 100);
-
-            // Timeout after 5 seconds if plugins never load
             setTimeout(() => clearInterval(checkInterval), 5000);
         }
-
-        // Fetch plugin data from GitHub
         async function fetchPluginData() {
             try {
-                // First, fetch the manifest to get the list of plugins
                 const manifestUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/refs/heads/${GITHUB_BRANCH}/manifest.json`;
                 const manifestResponse = await fetch(manifestUrl);
-                
                 if (!manifestResponse.ok) {
                     throw new Error('Failed to fetch manifest');
                 }
-                
                 const manifest = await manifestResponse.json();
                 const pluginGrid = document.getElementById('pluginGrid');
-                
-                // Clear loading message
                 pluginGrid.innerHTML = '';
-                
-                // Fetch each plugin's data
                 for (const pluginInfo of manifest.plugins) {
                     if (!pluginInfo.enabled) continue;
-                    
                     try {
                         const pluginDataUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${GITHUB_BRANCH}/plugins/${pluginInfo.folder}/plugin.json`;
                         const pluginResponse = await fetch(pluginDataUrl);
-                        
                         if (pluginResponse.ok) {
                             const pluginData = await pluginResponse.json();
                             pluginsData[pluginInfo.id] = pluginData;
-                            
-                            // Create plugin card
                             createPluginCard(pluginInfo.id, pluginData);
                         }
                     } catch (error) {
                         console.error(`Error fetching plugin ${pluginInfo.name}:`, error);
                     }
                 }
-                
-                // If no plugins were loaded, show fallback
                 if (Object.keys(pluginsData).length === 0) {
                     loadFallbackPlugins();
                 }
-                
-                // Setup click handlers for modal
                 setupModalHandlers();
-                
-                // Mark plugins as loaded
                 pluginsLoaded = true;
-                
-                // Handle direct plugin links
                 handleDirectPluginLink();
-                
             } catch (error) {
                 console.error('Error fetching plugin data:', error);
-                // Load fallback/hardcoded data
                 loadFallbackPlugins();
                 setupModalHandlers();
                 pluginsLoaded = true;
                 handleDirectPluginLink();
             }
         }
-
-        // Create a plugin card element
         function createPluginCard(id, plugin) {
             const card = document.createElement('div');
             card.className = 'plugin-card';
             card.setAttribute('data-plugin-id', id);
-            
             const statusClass = plugin.status.toLowerCase().replace(' ', '-');
-            
-            // Truncate features for display (show first 3)
             const displayFeatures = plugin.features.slice(0, 6);
-            
             card.innerHTML = `
                 <div class="plugin-header">
                     <h3 class="plugin-name">${plugin.name}</h3>
@@ -1427,23 +1216,17 @@
                     }
                 </div>
             `;
-            
             document.getElementById('pluginGrid').appendChild(card);
         }
-
-        // Generate shareable link for a plugin
         function getShareableLink(pluginId) {
             const baseUrl = window.location.origin + window.location.pathname;
             const plugin = pluginsData[pluginId];
             if (plugin) {
-                // Create a URL-friendly version of the plugin name
                 const urlParam = plugin.name.replace(/\s+/g, '');
                 return `${baseUrl}?plugin=${urlParam}`;
             }
             return baseUrl;
         }
-
-        // Fallback plugins data (hardcoded)
         function loadFallbackPlugins() {
             pluginsData = {
                 'tracex': {
@@ -1508,24 +1291,18 @@
                     downloadUrl: 'https://raw.githubusercontent.com/Pharaoh2k/BetterDiscordStuff/refs/heads/main/Plugins/VoiceEnhancer/VoiceEnhancer.plugin.js'
                 }
             };
-            
-            // Clear loading message and create cards
             document.getElementById('pluginGrid').innerHTML = '';
             for (const [id, plugin] of Object.entries(pluginsData)) {
                 createPluginCard(id, plugin);
             }
         }
-
-        // Setup modal click handlers
         function setupModalHandlers() {
             const cards = document.querySelectorAll('.plugin-card');
-            
             cards.forEach((card) => {
                 const pluginId = card.getAttribute('data-plugin-id');
                 if (pluginId) {
                     card.style.cursor = 'pointer';
                     card.addEventListener('click', function(e) {
-                        // Don't open modal if clicking on action buttons
                         if (!e.target.classList.contains('plugin-btn') && !e.target.closest('.plugin-btn')) {
                             openModal(pluginId);
                         }
@@ -1533,45 +1310,29 @@
                 }
             });
         }
-
-        // Load plugins when page loads
         document.addEventListener('DOMContentLoaded', function() {
             fetchPluginData();
         });
-
-        // Modal Functions
         function openModal(pluginId) {
             const plugin = pluginsData[pluginId];
             if (!plugin) return;
-
-            // Store current plugin ID for sharing
             currentPluginId = pluginId;
-
-            // Update modal content
             document.getElementById('modalTitle').textContent = plugin.name;
             document.getElementById('modalDescription').textContent = plugin.description;
             document.getElementById('modalAuthor').textContent = plugin.author || 'Pharaoh2k';
             document.getElementById('modalVersion').textContent = plugin.version;
             document.getElementById('modalUpdateDate').textContent = plugin.lastUpdated;
             document.getElementById('modalReleaseDate').textContent = plugin.releaseDate || plugin.lastUpdated;
-            
-            // Update status badges
             const statusBadge = document.getElementById('modalStatusBadge');
             statusBadge.textContent = plugin.workingStatus || 'Working';
             statusBadge.className = 'modal-status status-' + (plugin.workingStatus || 'working').toLowerCase().replace(' ', '-');
-            
             const pluginStatus = document.getElementById('modalPluginStatus');
             pluginStatus.textContent = plugin.status;
             pluginStatus.className = 'modal-status status-' + plugin.status.toLowerCase();
-
-            // Update features list
             const featuresList = document.getElementById('modalFeatures');
             featuresList.innerHTML = plugin.features.map(feature => `<li>${feature}</li>`).join('');
-
-            // Update links
             document.getElementById('modalSourceLink').href = plugin.sourceUrl;
             document.getElementById('modalChangelogLink').href = plugin.changelogUrl;
-            
             const downloadLink = document.getElementById('modalDownloadLink');
             if (!plugin.downloadUrl || plugin.downloadUrl === '#') {
                 downloadLink.innerHTML = '<span>🚧</span> Coming Soon';
@@ -1582,64 +1343,47 @@
                 downloadLink.href = plugin.downloadUrl;
                 downloadLink.onclick = null;
             }
-
-            // Show modal
             const overlay = document.getElementById('modalOverlay');
             overlay.style.display = 'flex';
             setTimeout(() => overlay.classList.add('active'), 10);
             document.body.style.overflow = 'hidden';
         }
-
-        // Share plugin - copy direct link to clipboard
         function sharePlugin() {
             if (!currentPluginId) return;
-            
             const shareableLink = getShareableLink(currentPluginId);
-            
-            // Copy to clipboard
             navigator.clipboard.writeText(shareableLink).then(() => {
-                // Show success feedback
                 const button = event.target.closest('button');
                 const originalHTML = button.innerHTML;
                 button.innerHTML = '<span>✅</span> Link Copied!';
                 button.style.background = 'rgba(0, 212, 170, 0.2)';
-                
                 setTimeout(() => {
                     button.innerHTML = originalHTML;
                     button.style.background = '';
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy link:', err);
-                // Fallback: show link in prompt
                 prompt('Copy this link:', shareableLink);
             });
         }
-
         function closeModal() {
             const overlay = document.getElementById('modalOverlay');
             overlay.classList.remove('active');
             setTimeout(() => {
                 overlay.style.display = 'none';
                 document.body.style.overflow = '';
-                currentPluginId = null; // Clear current plugin ID
+                currentPluginId = null;
             }, 300);
         }
-
-        // Close modal on overlay click
         document.getElementById('modalOverlay').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
             }
         });
-
-        // Close modal on ESC key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeModal();
             }
         });
-
-        // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 50) {
@@ -1648,8 +1392,6 @@
                 navbar.classList.remove('scrolled');
             }
         });
-
-        // Smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1662,8 +1404,6 @@
                 }
             });
         });
-
-        // Generate particles
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 50; i++) {
             const particle = document.createElement('div');
@@ -1673,13 +1413,10 @@
             particle.style.animationDuration = (15 + Math.random() * 10) + 's';
             particlesContainer.appendChild(particle);
         }
-
-        // Intersection Observer for animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
         };
-
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1688,24 +1425,18 @@
                 }
             });
         }, observerOptions);
-
-        // Observe plugin cards
         document.querySelectorAll('.plugin-card').forEach((card, index) => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(30px)';
             card.style.transition = `all 0.6s ease ${index * 0.1}s`;
             observer.observe(card);
         });
-
-        // Observe feature cards
         document.querySelectorAll('.feature-card').forEach((card, index) => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(30px)';
             card.style.transition = `all 0.6s ease ${index * 0.1}s`;
             observer.observe(card);
         });
-
-        // Dynamic stats counter
         const stats = document.querySelectorAll('.stat-number');
         const statsObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1713,7 +1444,6 @@
                     entry.target.classList.add('counted');
                     const target = entry.target;
                     const value = target.textContent;
-                    
                     if (value.includes('+')) {
                         const num = parseInt(value);
                         let current = 0;
@@ -1731,27 +1461,20 @@
                 }
             });
         });
-
         stats.forEach(stat => {
             statsObserver.observe(stat);
         });
-
-        // Plugin card hover effect
         document.querySelectorAll('.plugin-card').forEach(card => {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = ((e.clientX - rect.left) / rect.width) * 100;
                 const y = ((e.clientY - rect.top) / rect.height) * 100;
-                
                 card.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(88, 101, 242, 0.1), transparent 50%), var(--glass)`;
             });
-            
             card.addEventListener('mouseleave', () => {
                 card.style.background = 'var(--glass)';
             });
         });
-
-        // Add ripple effect to buttons
         document.querySelectorAll('.btn, .plugin-btn').forEach(button => {
             button.addEventListener('click', function(e) {
                 const ripple = document.createElement('span');
@@ -1759,14 +1482,11 @@
                 const size = Math.max(rect.width, rect.height);
                 const x = e.clientX - rect.left - size / 2;
                 const y = e.clientY - rect.top - size / 2;
-                
                 ripple.style.width = ripple.style.height = size + 'px';
                 ripple.style.left = x + 'px';
                 ripple.style.top = y + 'px';
                 ripple.classList.add('ripple');
-                
                 this.appendChild(ripple);
-                
                 setTimeout(() => {
                     ripple.remove();
                 }, 600);
