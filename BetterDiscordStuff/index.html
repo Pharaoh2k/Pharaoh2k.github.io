@@ -1066,7 +1066,7 @@
                         <a href="#" id="modalChangelogLink" class="modal-btn modal-btn-secondary" target="_blank">
                             <span>📜</span> Changelog
                         </a>
-                        <a href="#" id="modalDownloadLink" class="modal-btn modal-btn-primary">
+                        <a href="#" id="modalDownloadLink" class="modal-btn modal-btn-primary" target="_blank">
                             <span>⬇️</span> Download
                         </a>
                     </div>
@@ -1338,10 +1338,12 @@
                 downloadLink.innerHTML = '<span>🚧</span> Coming Soon';
                 downloadLink.href = '#';
                 downloadLink.onclick = (e) => e.preventDefault();
+                downloadLink.removeAttribute('target');
             } else {
                 downloadLink.innerHTML = '<span>⬇️</span> Download';
                 downloadLink.href = plugin.downloadUrl;
-                downloadLink.onclick = null;
+                downloadLink.onclick = null;  // Remove any onclick handler
+                downloadLink.target = '_blank';  // Ensure target is set
             }
             const overlay = document.getElementById('modalOverlay');
             overlay.style.display = 'flex';
