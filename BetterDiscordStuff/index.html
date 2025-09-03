@@ -376,6 +376,7 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
+            user-select: none;
         }
 
         .plugin-card::before {
@@ -507,6 +508,9 @@
             text-align: center;
             transition: all 0.3s ease;
             font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
         }
 
         .plugin-btn:hover {
@@ -658,6 +662,304 @@
             line-height: 1.6;
         }
 
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: linear-gradient(135deg, rgba(12, 14, 22, 0.95), rgba(6, 8, 16, 0.95));
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 25px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(235, 69, 158, 0.1));
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 24px;
+            color: var(--light);
+        }
+
+        .modal-close:hover {
+            background: rgba(235, 69, 158, 0.2);
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .modal-status-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .modal-status {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-working {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .status-testing {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+            border: 1px solid #FFC107;
+        }
+
+        .status-in-progress {
+            background: rgba(88, 101, 242, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .modal-status.status-active {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .modal-status.status-beta {
+            background: rgba(235, 69, 158, 0.2);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+
+        .modal-status.status-development {
+            background: rgba(88, 101, 242, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-section {
+            margin-bottom: 30px;
+        }
+
+        .modal-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .modal-description {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .modal-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .meta-item {
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .meta-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .meta-value {
+            font-size: 1rem;
+            color: var(--light);
+            font-weight: 600;
+        }
+
+        .modal-features {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .modal-features li {
+            padding: 12px 15px;
+            background: var(--glass);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-features li:hover {
+            background: rgba(88, 101, 242, 0.1);
+            transform: translateX(5px);
+        }
+
+        .modal-features li::before {
+            content: '✨';
+            font-size: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            color: white;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(88, 101, 242, 0.3);
+        }
+
+        .modal-btn-secondary {
+            background: var(--glass);
+            color: white;
+            border: 2px solid var(--glass-border);
+        }
+
+        button.modal-btn-secondary {
+            background: var(--glass);
+            color: white;
+            border: 2px solid var(--glass-border);
+        }
+
+        .modal-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Scrollbar for modal */
+        .modal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .modal::-webkit-scrollbar-thumb {
+            background: rgba(88, 101, 242, 0.3);
+            border-radius: 4px;
+        }
+
+        .modal::-webkit-scrollbar-thumb:hover {
+            background: rgba(88, 101, 242, 0.5);
+        }
+
         /* Footer */
         footer {
             padding: 50px 20px;
@@ -683,6 +985,15 @@
             color: var(--light);
             transition: all 0.3s ease;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-link svg {
+            width: 32px;
+            height: 32px;
+            transition: all 0.3s ease;
         }
 
         .social-link:hover {
@@ -690,9 +1001,18 @@
             color: var(--primary);
         }
 
+        .social-link:hover svg {
+            filter: drop-shadow(0 0 10px rgba(88, 101, 242, 0.5));
+        }
+
         .footer-text {
             color: rgba(255, 255, 255, 0.5);
             font-size: 1rem;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         /* Responsive */
@@ -762,121 +1082,17 @@
         <h2 class="section-title">Featured Plugins</h2>
         <p class="section-subtitle">Powerful tools to customize and enhance Discord</p>
         
-        <div class="plugin-grid">
-            <div class="plugin-card">
+        <div class="plugin-grid" id="pluginGrid">
+            <!-- Plugins will be dynamically loaded here -->
+            <div class="plugin-card" style="background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(235, 69, 158, 0.1)); border: 2px solid var(--primary);">
                 <div class="plugin-header">
-                    <h3 class="plugin-name">Message Logger</h3>
-                    <span class="plugin-status status-active">Active</span>
+                    <h3 class="plugin-name">Loading Plugins...</h3>
                 </div>
                 <p class="plugin-description">
-                    Track deleted and edited messages with ease. Never miss important information again.
+                    Fetching plugin data from GitHub repository...
                 </p>
-                <ul class="plugin-features">
-                    <li>Log deleted messages</li>
-                    <li>Track message edits</li>
-                    <li>Search history</li>
-                </ul>
-                <div class="plugin-actions">
-                    <a href="https://github.com/Pharaoh2k/BetterDiscord/MessageLogger" class="plugin-btn">Source</a>
-                    <a href="#" class="plugin-btn">Download</a>
-                </div>
-            </div>
-
-            <div class="plugin-card">
-                <div class="plugin-header">
-                    <h3 class="plugin-name">Theme Customizer</h3>
-                    <span class="plugin-status status-active">Active</span>
-                </div>
-                <p class="plugin-description">
-                    Advanced theme customization with real-time preview and custom CSS injection.
-                </p>
-                <ul class="plugin-features">
-                    <li>Live theme editing</li>
-                    <li>Custom color schemes</li>
-                    <li>Export/Import themes</li>
-                </ul>
-                <div class="plugin-actions">
-                    <a href="https://github.com/Pharaoh2k/BetterDiscord/ThemeCustomizer" class="plugin-btn">Source</a>
-                    <a href="#" class="plugin-btn">Download</a>
-                </div>
-            </div>
-
-            <div class="plugin-card">
-                <div class="plugin-header">
-                    <h3 class="plugin-name">Voice Enhancer</h3>
-                    <span class="plugin-status status-beta">Beta</span>
-                </div>
-                <p class="plugin-description">
-                    Improve voice quality with advanced audio processing and noise suppression.
-                </p>
-                <ul class="plugin-features">
-                    <li>Noise reduction</li>
-                    <li>Voice clarity boost</li>
-                    <li>Custom EQ settings</li>
-                </ul>
-                <div class="plugin-actions">
-                    <a href="https://github.com/Pharaoh2k/BetterDiscord/VoiceEnhancer" class="plugin-btn">Source</a>
-                    <a href="#" class="plugin-btn">Download</a>
-                </div>
-            </div>
-
-            <div class="plugin-card">
-                <div class="plugin-header">
-                    <h3 class="plugin-name">Auto Moderator</h3>
-                    <span class="plugin-status status-active">Active</span>
-                </div>
-                <p class="plugin-description">
-                    Automated moderation tools with customizable filters and smart detection.
-                </p>
-                <ul class="plugin-features">
-                    <li>Spam detection</li>
-                    <li>Custom word filters</li>
-                    <li>Auto-timeout system</li>
-                </ul>
-                <div class="plugin-actions">
-                    <a href="https://github.com/Pharaoh2k/BetterDiscord/AutoModerator" class="plugin-btn">Source</a>
-                    <a href="#" class="plugin-btn">Download</a>
-                </div>
-            </div>
-
-            <div class="plugin-card">
-                <div class="plugin-header">
-                    <h3 class="plugin-name">Emoji Manager</h3>
-                    <span class="plugin-status status-development">Development</span>
-                </div>
-                <p class="plugin-description">
-                    Enhanced emoji management with favorites, quick access, and custom categories.
-                </p>
-                <ul class="plugin-features">
-                    <li>Emoji favorites</li>
-                    <li>Quick emoji search</li>
-                    <li>Custom emoji packs</li>
-                </ul>
-                <div class="plugin-actions">
-                    <a href="https://github.com/Pharaoh2k/BetterDiscord/EmojiManager" class="plugin-btn">Source</a>
-                    <a href="#" class="plugin-btn">Coming Soon</a>
-                </div>
-            </div>
-
-            <div class="plugin-card">
-                <div class="plugin-header">
-                    <h3 class="plugin-name">Server Tools</h3>
-                    <span class="plugin-status status-active">Active</span>
-                </div>
-                <p class="plugin-description">
-                    Advanced server management utilities for power users and administrators.
-                </p>
-                <ul class="plugin-features">
-                    <li>Bulk actions</li>
-                    <li>Server analytics</li>
-                    <li>Role manager</li>
-                    <li>Member statistics</li>
-                    <li>Audit log viewer</li>
-                    <li>Backup & restore</li>
-                </ul>
-                <div class="plugin-actions">
-                    <a href="https://github.com/Pharaoh2k/BetterDiscord/ServerTools" class="plugin-btn">Source</a>
-                    <a href="#" class="plugin-btn">Download</a>
+                <div class="plugin-features" style="display: flex; justify-content: center; padding: 20px;">
+                    <div style="width: 50px; height: 50px; border: 3px solid var(--primary); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
                 </div>
             </div>
         </div>
@@ -920,16 +1136,16 @@
                 <div class="stat-label">Active Plugins</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">10K+</div>
-                <div class="stat-label">Downloads</div>
-            </div>
-            <div class="stat-item">
                 <div class="stat-number">24/7</div>
                 <div class="stat-label">Support</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">100%</div>
                 <div class="stat-label">Source Available</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Customization</div>
             </div>
         </div>
     </section>
@@ -949,12 +1165,89 @@
         </div>
     </section>
 
+    <!-- Modal Overlay -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-close" onclick="closeModal()">&times;</div>
+                <h2 class="modal-title" id="modalTitle">Plugin Name</h2>
+                <div class="modal-status-row">
+                    <span class="modal-status status-working" id="modalStatusBadge">Working</span>
+                    <span class="modal-status" id="modalPluginStatus">Active</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Description</h3>
+                    <p class="modal-description" id="modalDescription">Plugin description goes here.</p>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Information</h3>
+                    <div class="modal-meta">
+                        <div class="meta-item">
+                            <div class="meta-label">Author</div>
+                            <div class="meta-value" id="modalAuthor">Pharaoh2k</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Version</div>
+                            <div class="meta-value" id="modalVersion">1.0.0</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Last Updated</div>
+                            <div class="meta-value" id="modalUpdateDate">Dec 2024</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Released On</div>
+                            <div class="meta-value" id="modalReleaseDate">Nov 2024</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Features</h3>
+                    <ul class="modal-features" id="modalFeatures">
+                        <li>Feature 1</li>
+                        <li>Feature 2</li>
+                    </ul>
+                </div>
+
+                <div class="modal-section">
+                    <div class="modal-actions">
+                        <a href="#" id="modalSourceLink" class="modal-btn modal-btn-secondary" target="_blank">
+                            <span>📦</span> View Source
+                        </a>
+                        <a href="#" id="modalChangelogLink" class="modal-btn modal-btn-secondary" target="_blank">
+                            <span>📜</span> Changelog
+                        </a>
+                        <a href="#" id="modalDownloadLink" class="modal-btn modal-btn-primary">
+                            <span>⬇️</span> Download
+                        </a>
+                    </div>
+                    <div class="modal-actions" style="margin-top: 10px;">
+                        <button onclick="sharePlugin()" class="modal-btn modal-btn-secondary" style="width: 100%;">
+                            <span>🔗</span> Copy Direct Link
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="footer-content">
             <div class="social-links">
-                <a href="https://github.com/Pharaoh2k" class="social-link" target="_blank">📦</a>
+                <a href="https://github.com/Pharaoh2k" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
                 <a href="https://discord.gg/pharaoh2k" class="social-link" target="_blank">💬</a>
-                <a href="https://twitter.com/pharaoh2k" class="social-link" target="_blank">🐦</a>
+                <a href="https://twitter.com/pharaoh2k" class="social-link" target="_blank">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
             </div>
             <p class="footer-text">
                 © 2024-2025 Pharaoh2k's BetterDiscord Stuff | All Rights Reserved | Made with ❤️ for the Discord community
@@ -963,6 +1256,389 @@
     </footer>
 
     <script>
+        // Configuration
+        const GITHUB_USERNAME = 'Pharaoh2k';
+        const GITHUB_REPO = 'BetterDiscord';
+        const GITHUB_BRANCH = 'main'; // or 'master'
+        
+        // Plugin Data Storage
+        let pluginsData = {};
+        let pluginsLoaded = false;
+        let currentPluginId = null;
+
+        // Parse URL parameters
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Handle direct plugin links
+        function handleDirectPluginLink() {
+            const pluginParam = getUrlParameter('plugin');
+            if (!pluginParam) return;
+
+            // Normalize the plugin ID (convert to lowercase and add hyphens)
+            let normalizedId = pluginParam
+                .replace(/([A-Z])/g, '-$1')
+                .toLowerCase()
+                .replace(/^-/, '')
+                .replace(/-v-?[0-9]+$/i, ''); // Remove version numbers like V2
+
+            // Handle legacy names
+            if (normalizedId === 'message-logger' || normalizedId === 'messagelogger' || normalizedId === 'messageloggerv2') {
+                normalizedId = 'tracex';
+            }
+
+            // Wait for plugins to load
+            const checkInterval = setInterval(() => {
+                if (pluginsLoaded) {
+                    clearInterval(checkInterval);
+                    
+                    // Scroll to plugins section
+                    const pluginsSection = document.getElementById('plugins');
+                    if (pluginsSection) {
+                        pluginsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        
+                        // Open modal after scroll animation
+                        setTimeout(() => {
+                            // Try to find the plugin with various ID formats
+                            let pluginId = null;
+                            
+                            // Check exact match first
+                            if (pluginsData[normalizedId]) {
+                                pluginId = normalizedId;
+                            } else {
+                                // Try to find a partial match
+                                for (const id in pluginsData) {
+                                    if (id.includes(normalizedId.replace(/-/g, '')) || 
+                                        normalizedId.includes(id.replace(/-/g, ''))) {
+                                        pluginId = id;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            if (pluginId) {
+                                openModal(pluginId);
+                                
+                                // Update URL without the parameter after opening
+                                const newUrl = window.location.pathname;
+                                window.history.replaceState({}, document.title, newUrl);
+                            } else {
+                                console.warn(`Plugin "${pluginParam}" not found`);
+                            }
+                        }, 800); // Wait for scroll animation
+                    }
+                }
+            }, 100);
+
+            // Timeout after 5 seconds if plugins never load
+            setTimeout(() => clearInterval(checkInterval), 5000);
+        }
+
+        // Fetch plugin data from GitHub
+        async function fetchPluginData() {
+            try {
+                // First, fetch the manifest to get the list of plugins
+                const manifestUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/refs/heads/${GITHUB_BRANCH}/manifest.json`;
+                const manifestResponse = await fetch(manifestUrl);
+                
+                if (!manifestResponse.ok) {
+                    throw new Error('Failed to fetch manifest');
+                }
+                
+                const manifest = await manifestResponse.json();
+                const pluginGrid = document.getElementById('pluginGrid');
+                
+                // Clear loading message
+                pluginGrid.innerHTML = '';
+                
+                // Fetch each plugin's data
+                for (const pluginInfo of manifest.plugins) {
+                    if (!pluginInfo.enabled) continue;
+                    
+                    try {
+                        const pluginDataUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/${GITHUB_BRANCH}/plugins/${pluginInfo.folder}/plugin.json`;
+                        const pluginResponse = await fetch(pluginDataUrl);
+                        
+                        if (pluginResponse.ok) {
+                            const pluginData = await pluginResponse.json();
+                            pluginsData[pluginInfo.id] = pluginData;
+                            
+                            // Create plugin card
+                            createPluginCard(pluginInfo.id, pluginData);
+                        }
+                    } catch (error) {
+                        console.error(`Error fetching plugin ${pluginInfo.name}:`, error);
+                    }
+                }
+                
+                // If no plugins were loaded, show fallback
+                if (Object.keys(pluginsData).length === 0) {
+                    loadFallbackPlugins();
+                }
+                
+                // Setup click handlers for modal
+                setupModalHandlers();
+                
+                // Mark plugins as loaded
+                pluginsLoaded = true;
+                
+                // Handle direct plugin links
+                handleDirectPluginLink();
+                
+            } catch (error) {
+                console.error('Error fetching plugin data:', error);
+                // Load fallback/hardcoded data
+                loadFallbackPlugins();
+                setupModalHandlers();
+                pluginsLoaded = true;
+                handleDirectPluginLink();
+            }
+        }
+
+        // Create a plugin card element
+        function createPluginCard(id, plugin) {
+            const card = document.createElement('div');
+            card.className = 'plugin-card';
+            card.setAttribute('data-plugin-id', id);
+            
+            const statusClass = plugin.status.toLowerCase().replace(' ', '-');
+            
+            // Truncate features for display (show first 3)
+            const displayFeatures = plugin.features.slice(0, 6);
+            
+            card.innerHTML = `
+                <div class="plugin-header">
+                    <h3 class="plugin-name">${plugin.name}</h3>
+                    <span class="plugin-status status-${statusClass}">${plugin.status}</span>
+                </div>
+                <p class="plugin-description">
+                    ${plugin.description}
+                </p>
+                <ul class="plugin-features">
+                    ${displayFeatures.map(feature => `<li>${feature}</li>`).join('')}
+                </ul>
+                <div class="plugin-actions">
+                    <a href="${plugin.sourceUrl}" class="plugin-btn" target="_blank">Source</a>
+                    ${plugin.downloadUrl && plugin.downloadUrl !== '#' 
+                        ? `<a href="${plugin.downloadUrl}" class="plugin-btn" target="_blank">Download</a>`
+                        : `<a href="#" class="plugin-btn" onclick="event.preventDefault()">Coming Soon</a>`
+                    }
+                </div>
+            `;
+            
+            document.getElementById('pluginGrid').appendChild(card);
+        }
+
+        // Generate shareable link for a plugin
+        function getShareableLink(pluginId) {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const plugin = pluginsData[pluginId];
+            if (plugin) {
+                // Create a URL-friendly version of the plugin name
+                const urlParam = plugin.name.replace(/\s+/g, '');
+                return `${baseUrl}?plugin=${urlParam}`;
+            }
+            return baseUrl;
+        }
+
+        // Fallback plugins data (hardcoded)
+        function loadFallbackPlugins() {
+            pluginsData = {
+                'tracex': {
+                    name: 'TraceX',
+                    status: 'Active',
+                    workingStatus: 'Working',
+                    description: 'Track deleted and edited messages with ease. Never miss important information again.',
+                    author: 'Pharaoh2k',
+                    version: '2.1.0',
+                    lastUpdated: 'Dec 2024',
+                    releaseDate: 'Jun 2024',
+                    features: [
+                        'Log deleted messages',
+                        'Track message edits',
+                        'Search history',
+                        'Export logs to JSON/CSV',
+                        'Filter by user/channel',
+                        'Customizable retention period'
+                    ],
+                    sourceUrl: 'https://github.com/Pharaoh2k/BetterDiscordStuff/tree/main/Plugins/TraceX',
+                    changelogUrl: 'https://raw.githubusercontent.com/Pharaoh2k/BetterDiscordStuff/refs/heads/main/Plugins/TraceX/CHANGELOG.md',
+                    downloadUrl: 'https://raw.githubusercontent.com/Pharaoh2k/BetterDiscordStuff/refs/heads/main/Plugins/TraceX/TraceX.plugin.js'
+                },
+                'theme-customizer': {
+                    name: 'Theme Customizer',
+                    status: 'Active',
+                    workingStatus: 'Working',
+                    description: 'Advanced theme customization with real-time preview and custom CSS injection.',
+                    author: 'Pharaoh2k',
+                    version: '3.0.5',
+                    lastUpdated: 'Jan 2025',
+                    releaseDate: 'Mar 2024',
+                    features: [
+                        'Live theme editing',
+                        'Custom color schemes',
+                        'Export/Import themes',
+                        'Visual CSS editor',
+                        'Theme marketplace integration',
+                        'Preset theme library'
+                    ],
+                    sourceUrl: 'https://github.com/Pharaoh2k/BetterDiscordStuff/tree/main/Plugins/ThemeCustomizer',
+                    changelogUrl: 'https://raw.githubusercontent.com/Pharaoh2k/BetterDiscordStuff/refs/heads/main/Plugins/ThemeCustomizer/CHANGELOG.md',
+                    downloadUrl: 'https://raw.githubusercontent.com/Pharaoh2k/BetterDiscordStuff/refs/heads/main/Plugins/ThemeCustomizer/ThemeCustomizer.plugin.js'
+                },
+                'voice-enhancer': {
+                    name: 'Voice Enhancer',
+                    status: 'Beta',
+                    workingStatus: 'Testing',
+                    description: 'Improve voice quality with advanced audio processing and noise suppression.',
+                    author: 'Pharaoh2k',
+                    version: '1.0.0-beta.3',
+                    lastUpdated: 'Jan 2025',
+                    releaseDate: 'Nov 2024',
+                    features: [
+                        'Noise reduction',
+                        'Voice clarity boost',
+                        'Custom EQ settings',
+                        'Echo cancellation'
+                    ],
+                    sourceUrl: 'https://github.com/Pharaoh2k/BetterDiscordStuff/tree/main/Plugins/VoiceEnhancer',
+                    changelogUrl: 'https://raw.githubusercontent.com/Pharaoh2k/BetterDiscordStuff/refs/heads/main/Plugins/VoiceEnhancer/CHANGELOG.md',
+                    downloadUrl: 'https://raw.githubusercontent.com/Pharaoh2k/BetterDiscordStuff/refs/heads/main/Plugins/VoiceEnhancer/VoiceEnhancer.plugin.js'
+                }
+            };
+            
+            // Clear loading message and create cards
+            document.getElementById('pluginGrid').innerHTML = '';
+            for (const [id, plugin] of Object.entries(pluginsData)) {
+                createPluginCard(id, plugin);
+            }
+        }
+
+        // Setup modal click handlers
+        function setupModalHandlers() {
+            const cards = document.querySelectorAll('.plugin-card');
+            
+            cards.forEach((card) => {
+                const pluginId = card.getAttribute('data-plugin-id');
+                if (pluginId) {
+                    card.style.cursor = 'pointer';
+                    card.addEventListener('click', function(e) {
+                        // Don't open modal if clicking on action buttons
+                        if (!e.target.classList.contains('plugin-btn') && !e.target.closest('.plugin-btn')) {
+                            openModal(pluginId);
+                        }
+                    });
+                }
+            });
+        }
+
+        // Load plugins when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchPluginData();
+        });
+
+        // Modal Functions
+        function openModal(pluginId) {
+            const plugin = pluginsData[pluginId];
+            if (!plugin) return;
+
+            // Store current plugin ID for sharing
+            currentPluginId = pluginId;
+
+            // Update modal content
+            document.getElementById('modalTitle').textContent = plugin.name;
+            document.getElementById('modalDescription').textContent = plugin.description;
+            document.getElementById('modalAuthor').textContent = plugin.author || 'Pharaoh2k';
+            document.getElementById('modalVersion').textContent = plugin.version;
+            document.getElementById('modalUpdateDate').textContent = plugin.lastUpdated;
+            document.getElementById('modalReleaseDate').textContent = plugin.releaseDate || plugin.lastUpdated;
+            
+            // Update status badges
+            const statusBadge = document.getElementById('modalStatusBadge');
+            statusBadge.textContent = plugin.workingStatus || 'Working';
+            statusBadge.className = 'modal-status status-' + (plugin.workingStatus || 'working').toLowerCase().replace(' ', '-');
+            
+            const pluginStatus = document.getElementById('modalPluginStatus');
+            pluginStatus.textContent = plugin.status;
+            pluginStatus.className = 'modal-status status-' + plugin.status.toLowerCase();
+
+            // Update features list
+            const featuresList = document.getElementById('modalFeatures');
+            featuresList.innerHTML = plugin.features.map(feature => `<li>${feature}</li>`).join('');
+
+            // Update links
+            document.getElementById('modalSourceLink').href = plugin.sourceUrl;
+            document.getElementById('modalChangelogLink').href = plugin.changelogUrl;
+            
+            const downloadLink = document.getElementById('modalDownloadLink');
+            if (!plugin.downloadUrl || plugin.downloadUrl === '#') {
+                downloadLink.innerHTML = '<span>🚧</span> Coming Soon';
+                downloadLink.href = '#';
+                downloadLink.onclick = (e) => e.preventDefault();
+            } else {
+                downloadLink.innerHTML = '<span>⬇️</span> Download';
+                downloadLink.href = plugin.downloadUrl;
+                downloadLink.onclick = null;
+            }
+
+            // Show modal
+            const overlay = document.getElementById('modalOverlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.classList.add('active'), 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Share plugin - copy direct link to clipboard
+        function sharePlugin() {
+            if (!currentPluginId) return;
+            
+            const shareableLink = getShareableLink(currentPluginId);
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(shareableLink).then(() => {
+                // Show success feedback
+                const button = event.target.closest('button');
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<span>✅</span> Link Copied!';
+                button.style.background = 'rgba(0, 212, 170, 0.2)';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy link:', err);
+                // Fallback: show link in prompt
+                prompt('Copy this link:', shareableLink);
+            });
+        }
+
+        function closeModal() {
+            const overlay = document.getElementById('modalOverlay');
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+                currentPluginId = null; // Clear current plugin ID
+            }, 300);
+        }
+
+        // Close modal on overlay click
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
