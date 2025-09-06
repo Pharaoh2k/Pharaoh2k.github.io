@@ -349,11 +349,12 @@
             transition: opacity 0.3s ease;
         }
         .plugin-card:hover::before {
-            opacity: 1;
+            opacity: 0.2; /* Much softer gradient border */
         }
         .plugin-card:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: 0 20px 40px rgba(88, 101, 242, 0.3);
+            background: rgba(12, 14, 22, 0.6); /* Darker background for better readability */
         }
         .plugin-header {
             display: flex;
@@ -1106,6 +1107,31 @@
         let pluginsData = {};
         let pluginsLoaded = false;
         let currentPluginId = null;
+        
+        async function downloadPlugin(url, filename) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                
+                // Create blob URL and trigger download
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(blobUrl);
+                
+                return true;
+            } catch (error) {
+                console.error('Download failed:', error);
+                // Fallback: open in new tab
+                window.open(url, '_blank');
+                return false;
+            }
+        }
+        
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
@@ -1181,12 +1207,14 @@
                     loadFallbackPlugins();
                 }
                 setupModalHandlers();
+                setupCardEffects(); // Add card hover effects
                 pluginsLoaded = true;
                 handleDirectPluginLink();
             } catch (error) {
                 console.error('Error fetching plugin data:', error);
                 loadFallbackPlugins();
                 setupModalHandlers();
+                setupCardEffects(); // Add card hover effects
                 pluginsLoaded = true;
                 handleDirectPluginLink();
             }
@@ -1211,7 +1239,7 @@
                 <div class="plugin-actions">
                     <a href="${plugin.sourceUrl}" class="plugin-btn" target="_blank">Source</a>
                     ${plugin.downloadUrl && plugin.downloadUrl !== '#' 
-                        ? `<a href="${plugin.downloadUrl}" class="plugin-btn" target="_blank">Download</a>`
+                        ? `<a href="#" class="plugin-btn" onclick="event.preventDefault(); downloadPlugin('${plugin.downloadUrl}', '${plugin.name.replace(/\s+/g, '')}.plugin.js').then(success => { if(success) { this.innerHTML = '<span>✅</span> Downloaded!'; setTimeout(() => { this.innerHTML = 'Download'; }, 2000); } })">Download</a>`
                         : `<a href="#" class="plugin-btn" onclick="event.preventDefault()">Coming Soon</a>`
                     }
                 </div>
@@ -1310,6 +1338,20 @@
                 }
             });
         }
+        function setupCardEffects() {
+            document.querySelectorAll('.plugin-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    // More visible gradient with darker background
+                    card.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(88, 101, 242, 0.15), transparent 60%), rgba(12, 14, 22, 0.6)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.background = 'var(--glass)';
+                });
+            });
+        }
         document.addEventListener('DOMContentLoaded', function() {
             fetchPluginData();
         });
@@ -1341,9 +1383,25 @@
                 downloadLink.removeAttribute('target');
             } else {
                 downloadLink.innerHTML = '<span>⬇️</span> Download';
-                downloadLink.href = plugin.downloadUrl;
-                downloadLink.onclick = null;  // Remove any onclick handler
-                downloadLink.target = '_blank';  // Ensure target is set
+                downloadLink.href = '#';
+                downloadLink.onclick = async (e) => {
+                    e.preventDefault();
+                    const originalHTML = downloadLink.innerHTML;
+                    downloadLink.innerHTML = '<span>⏳</span> Downloading...';
+                    
+                    const filename = `${plugin.name.replace(/\s+/g, '')}.plugin.js`;
+                    const success = await downloadPlugin(plugin.downloadUrl, filename);
+                    
+                    if (success) {
+                        downloadLink.innerHTML = '<span>✅</span> Downloaded!';
+                        setTimeout(() => {
+                            downloadLink.innerHTML = originalHTML;
+                        }, 2000);
+                    } else {
+                        downloadLink.innerHTML = originalHTML;
+                    }
+                };
+                downloadLink.removeAttribute('target');
             }
             const overlay = document.getElementById('modalOverlay');
             overlay.style.display = 'flex';
@@ -1470,17 +1528,7 @@
         stats.forEach(stat => {
             statsObserver.observe(stat);
         });
-        document.querySelectorAll('.plugin-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / rect.width) * 100;
-                const y = ((e.clientY - rect.top) / rect.height) * 100;
-                card.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(88, 101, 242, 0.1), transparent 50%), var(--glass)`;
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.background = 'var(--glass)';
-            });
-        });
+        // Card effects are now set up after cards are created
         document.querySelectorAll('.btn, .plugin-btn').forEach(button => {
             button.addEventListener('click', function(e) {
                 const ripple = document.createElement('span');
