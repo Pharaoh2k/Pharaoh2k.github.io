@@ -349,7 +349,7 @@
             transition: opacity 0.3s ease;
         }
         .plugin-card:hover::before {
-            opacity: 0.2; /* Much softer gradient border */
+            opacity: 0.4; /* Much softer gradient border */
         }
         .plugin-card:hover {
             transform: translateY(-10px) scale(1.02);
@@ -985,7 +985,7 @@
     <section class="stats">
         <div class="stats-grid">
             <div class="stat-item">
-                <div class="stat-number">6+</div>
+                <div class="stat-number" id="activePluginCount">0</div>
                 <div class="stat-label">Active Plugins</div>
             </div>
             <div class="stat-item">
@@ -1208,6 +1208,7 @@
                 }
                 setupModalHandlers();
                 setupCardEffects(); // Add card hover effects
+				updatePluginCount(); // Update active plugin count
                 pluginsLoaded = true;
                 handleDirectPluginLink();
             } catch (error) {
@@ -1215,6 +1216,7 @@
                 loadFallbackPlugins();
                 setupModalHandlers();
                 setupCardEffects(); // Add card hover effects
+				updatePluginCount(); // Update active plugin count
                 pluginsLoaded = true;
                 handleDirectPluginLink();
             }
@@ -1323,6 +1325,7 @@
             for (const [id, plugin] of Object.entries(pluginsData)) {
                 createPluginCard(id, plugin);
             }
+			updatePluginCount();
         }
         function setupModalHandlers() {
             const cards = document.querySelectorAll('.plugin-card');
@@ -1352,6 +1355,15 @@
                 });
             });
         }
+		function updatePluginCount() {
+			const activeCount = Object.values(pluginsData).filter(plugin => 
+				plugin.status && plugin.status.toLowerCase() === 'active'
+			).length;
+			const countElement = document.getElementById('activePluginCount');
+			if (countElement) {
+				countElement.textContent = activeCount > 0 ? activeCount + '+' : '0';
+			}
+		}
         document.addEventListener('DOMContentLoaded', function() {
             fetchPluginData();
         });
