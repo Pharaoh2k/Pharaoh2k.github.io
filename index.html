@@ -1107,6 +1107,31 @@
         let pluginsData = {};
         let pluginsLoaded = false;
         let currentPluginId = null;
+        
+        async function downloadPlugin(url, filename) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                
+                // Create blob URL and trigger download
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(blobUrl);
+                
+                return true;
+            } catch (error) {
+                console.error('Download failed:', error);
+                // Fallback: open in new tab
+                window.open(url, '_blank');
+                return false;
+            }
+        }
+        
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
@@ -1214,7 +1239,7 @@
                 <div class="plugin-actions">
                     <a href="${plugin.sourceUrl}" class="plugin-btn" target="_blank">Source</a>
                     ${plugin.downloadUrl && plugin.downloadUrl !== '#' 
-                        ? `<a href="${plugin.downloadUrl}" class="plugin-btn" target="_blank">Download</a>`
+                        ? `<a href="#" class="plugin-btn" onclick="event.preventDefault(); downloadPlugin('${plugin.downloadUrl}', '${plugin.name.replace(/\s+/g, '')}.plugin.js').then(success => { if(success) { this.innerHTML = '<span>✅</span> Downloaded!'; setTimeout(() => { this.innerHTML = 'Download'; }, 2000); } })">Download</a>`
                         : `<a href="#" class="plugin-btn" onclick="event.preventDefault()">Coming Soon</a>`
                     }
                 </div>
