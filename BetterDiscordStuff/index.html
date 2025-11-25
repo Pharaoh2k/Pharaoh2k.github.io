@@ -1818,8 +1818,8 @@
             const ok = await downloadPlugin(plugin.downloadUrl, filename);
             downloadLink.innerHTML = ok ? "<span>✅</span> Downloaded!" : originalHTML;
             setTimeout(() => {
-              downloadLink.innerHTML = " < span > ⬇️ < /span> Download"
-            }, 2000)
+              downloadLink.innerHTML = originalHTML;
+            }, 2000);
           }, {
             once: true
           })
